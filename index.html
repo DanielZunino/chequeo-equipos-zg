@@ -68,11 +68,19 @@ canvas{width:100%;height:150px;border:2px dashed #B0BEC5;border-radius:12px;back
 .hide{display:none!important}.spin{width:42px;height:42px;border:5px solid #E2E8F0;border-top-color:var(--amber);border-radius:50%;animation:s 1s linear infinite;margin:20px auto}@keyframes s{to{transform:rotate(360deg)}}
 .nuevo{border:2.5px dashed var(--amber);border-radius:14px;padding:12px;margin-top:12px;background:#FFFBF0}
 .pie{text-align:center;color:#94A3B8;font-size:11.5px;margin-top:20px}
+#mano{position:fixed;z-index:20;font-size:40px;pointer-events:none;filter:drop-shadow(0 3px 4px #0005);transition:left .35s ease,top .35s ease,opacity .25s;opacity:0}
+#mano.on{opacity:1;animation:toque 1.1s ease-in-out infinite}
+@keyframes toque{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.pulso{animation:pulso 1.4s ease-in-out infinite;border-radius:14px}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 0 #F2A90000}50%{box-shadow:0 0 0 6px #F2A90066}}
+.fecha-row{display:flex;gap:8px;align-items:center}.fecha-row input{font-size:20px;letter-spacing:1px;text-align:center;max-width:190px}
+#rut{font-size:22px;letter-spacing:1px;text-align:center}
 </style>
 </head>
 <body>
 <header><div class="hrow"><img class="logo" id="logo" alt="ZG SpA" src="" style="display:none"><div style="flex:1;min-width:0"><div class="t">Chequeo de equipos</div><div class="s" id="sub">ZG SpA</div></div><button id="bVoz" class="vozb" onclick="togVoz()" aria-label="Voz">🔊</button></div><div class="prog"><i id="bar"></i></div></header>
 <main id="app"><div class="card center"><div class="spin"></div><p class="mut">Cargando…</p></div></main>
+<div id="mano">👆</div>
 <div class="foot hide" id="foot"><div class="in"><button class="btn gh" id="bBack">← Atrás</button><button class="btn am" id="bNext">Siguiente →</button></div></div>
 
 <script>
@@ -291,7 +299,7 @@ function oirItem(k) { const [bid, iid] = k.split('.'), b = bloques().find(x => x
   VOZ.say(it.t + '. ' + it.tip + ' ¿Por qué importa? ' + it.why + (it.crit ? ' Este punto es crítico: si está malo, el equipo no opera.' : ''), document.getElementById('it-' + k.replace('.', '-'))); }
 function vozPantalla() {
   const p = S.paso;
-  if (p === 0) return VOZ.say('Hola. Vamos a revisar tu equipo antes de operar. Escribe tu rut, o toca tu nombre en la lista.');
+  if (p === 0) return VOZ.say('Hola. Vamos a revisar tu equipo antes de operar. Escribe tu rut y toca entrar.');
   if (p === 1) return VOZ.say('Hola ' + S.persona.nombre.split(' ')[0] + '. ¿Qué equipo vas a revisar hoy? Elige el tipo de equipo.');
   if (p === 2) return VOZ.say('Ahora elige la patente o el código del equipo. Si no está en la lista, agrégalo: el prevencionista lo va a verificar.');
   if (p < pasoResumen()) { const b = bloques()[p - 3]; return VOZ.say('Parte ' + (p - 2) + ' de ' + nB() + ': ' + b.t + '. ' + (b.d || '') + ' Marca cada punto. Si tienes dudas, toca escuchar.'); }
@@ -341,22 +349,21 @@ function render() {
   else if (p === pasoResumen()) app.innerHTML = vResumen();
   else if (p === pasoReporte()) { app.innerHTML = vReporte(); firmaInit(); }
   else app.innerHTML = vFin();
-  window.scrollTo(0, 0); guarda(); pintaVoz();
+  window.scrollTo(0, 0); guarda(); pintaVoz(); guia();
   if (S._ultVoz !== p + '|' + S.tipo) { S._ultVoz = p + '|' + S.tipo; vozPantalla(); }
 }
 function vInicio() {
-  let bor = null, yo = ''; try { bor = JSON.parse(localStorage.getItem(LS) || 'null'); yo = localStorage.getItem('zg_pid') || ''; } catch (e) {}
+  let bor = null, ult = ''; try { bor = JSON.parse(localStorage.getItem(LS) || 'null'); ult = localStorage.getItem('zg_rut') || ''; } catch (e) {}
   const hay = bor && bor.persona && bor.tipo && bor.paso > 1;
-  const lista = S.personas.slice().sort((a, b) => (b.id === yo) - (a.id === yo));
   return `<div class="card center"><div class="big">🚜🔧</div><h2>Chequeo antes de operar</h2><p class="m">Revisa tu equipo en unos 5 minutos. Protege tu vida y la de tus compañeros.</p></div>
-  ${hay ? `<div class="card"><h3>📝 Tienes un chequeo sin terminar</h3><p class="m">${esc(bor.persona.nombre)} · ${esc(TIPOS[bor.tipo] ? TIPOS[bor.tipo].t : '')} ${esc(patKey(bor.patente))}</p><button class="btn" onclick="seguir()">Continuar donde quedé</button><div style="height:8px"></div><button class="btn gh" onclick="descartar()">Empezar uno nuevo</button></div>` : ''}
-  <div class="card"><h3>🪪 Entra con tu RUT</h3><div style="display:flex;gap:8px"><input id="rut" inputmode="text" autocomplete="off" placeholder="12.345.678-9" onkeydown="if(event.key==='Enter')entrarRut()"><button class="btn am" id="bRut" style="width:auto;padding:12px 18px" onclick="entrarRut()">Entrar</button></div><div id="errRut" class="info x hide"></div></div>
-  <div class="card"><h3>👷 …o toca tu nombre</h3>${S.personas.length > 8 ? '<input placeholder="🔎 Buscar…" oninput="filtra(this.value)" style="margin-bottom:10px">' : ''}
-  <div class="pers" id="pers">${lista.map(p => `<button class="per ${p.id === yo ? 'yo' : ''}" data-n="${esc(p.n.toLowerCase())}" onclick="elegirPersona('${p.id}',this)"><div class="av">${esc(ini(p.n))}</div><div><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.e)}</span></div></button>`).join('') || '<div class="mut">No hay trabajadores activos en la nómina.</div>'}</div>
-  <div id="err" class="info x hide"></div>${S.form ? `<div class="nuevo" style="margin-top:14px"><b>📝 ¿No apareces?</b><p class="m" style="margin:4px 0 10px">Inscríbete en la nómina de ZG SpA con este formulario y <b>espera la autorización</b> del prevencionista. Cuando te autoricen, aparecerás en la lista y podrás hacer el chequeo.</p><a class="btn am" href="${esc(S.form)}" target="_blank" style="text-decoration:none">Inscribirme en la nómina</a></div>` : '<p class="small mut" style="margin-top:12px">¿No apareces? Pide a tu jefatura que te inscriba en la nómina de ZG SpA.</p>'}</div>
+  ${hay ? `<div class="card"><h3>📝 Tienes un chequeo sin terminar</h3><p class="m">${esc(bor.persona.nombre)} · ${esc(TIPOS[bor.tipo] ? TIPOS[bor.tipo].t : '')} ${esc(patKey(bor.patente))}</p><button class="btn" id="bSeguir" onclick="seguir()">Continuar donde quedé</button><div style="height:8px"></div><button class="btn gh" onclick="descartar()">Empezar uno nuevo</button></div>` : ''}
+  <div class="card"><h3>🪪 Escribe tu RUT</h3><p class="m">Sin puntos ni guion, se ordena solo.</p>
+  <input id="rut" inputmode="text" autocomplete="off" autocapitalize="characters" placeholder="12.345.678-9" value="${esc(ult)}" oninput="mascaraRut(this)" onkeydown="if(event.key==='Enter')entrarRut()">
+  <div style="height:10px"></div><button class="btn am" id="bRut" onclick="entrarRut()">Entrar →</button><div id="errRut" class="info x hide"></div>
+  ${S.form ? `<div class="nuevo hide" id="inscribir" style="margin-top:14px"><b>📝 No te encontramos en la nómina</b><p class="m" style="margin:4px 0 10px">Inscríbete en la nómina de ZG SpA con este formulario y <b>espera la autorización</b> del prevencionista. Cuando te autoricen, podrás entrar con tu RUT.</p><a class="btn am" id="bInscribir" href="${esc(S.form)}" target="_blank" style="text-decoration:none">Inscribirme en la nómina</a></div>` : ''}</div>
   <div class="pie">Creado por Daniel Zunino · Integra Prevención SpA</div>`;
 }
-function filtra(q) { q = q.toLowerCase().trim(); document.querySelectorAll('#pers .per').forEach(b => b.classList.toggle('hide', !!q && b.dataset.n.indexOf(q) < 0)); }
+function mascaraRut(el) { const r = el.value.replace(/[^0-9kK]/g, '').toUpperCase().slice(0, 9); el.value = r.length < 2 ? r : r.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + r.slice(-1); $('#errRut') && $('#errRut').classList.add('hide'); if (S._noRut) { S._noRut = false; $('#inscribir') && $('#inscribir').classList.add('hide'); } guia(); }
 function seguir() { try { Object.assign(S, JSON.parse(localStorage.getItem(LS))); } catch (e) {} render(); }
 function descartar() { try { localStorage.removeItem(LS); } catch (e) {} render(); }
 function entrarRut() {
@@ -369,9 +376,9 @@ async function elegirPersona(id, btn, porRut) {
   const libera = () => document.querySelectorAll('.per,#bRut').forEach(b => { b.disabled = false; b.style.opacity = 1; });
   try {
     const d = await api('apiOperador', id);
-    if (!d.ok) { libera(); err.textContent = porRut ? 'No encontramos ese RUT en la nómina de ZG SpA. Revisa que esté bien escrito, busca tu nombre en la lista o inscríbete más abajo y espera la autorización.' : 'No te encontramos en la nómina.'; err.classList.remove('hide'); VOZ.say('No encontramos ese rut en la nómina.'); return; }
+    if (!d.ok) { libera(); err.textContent = 'No encontramos ese RUT en la nómina de ZG SpA. Revisa que esté bien escrito.'; err.classList.remove('hide'); const ins = $('#inscribir'); if (ins) { ins.classList.remove('hide'); S._noRut = true; guia(true); } VOZ.say('No encontramos ese rut en la nómina. Si es correcto, inscríbete con el formulario y espera la autorización.'); return; }
     id = d.persona.id;
-    try { localStorage.setItem('zg_pid', id); S.faena = S.faena || localStorage.getItem('zg_faena') || ''; } catch (e) {}
+    try { if (porRut) localStorage.setItem('zg_rut', $('#rut').value); localStorage.setItem('zg_pid', id); S.faena = S.faena || localStorage.getItem('zg_faena') || ''; } catch (e) {}
     Object.assign(S, { persona: d.persona, enc: d.encargados || [], equipos: d.equipos || [], tipo: '', patente: '', nuevoEq: false, res: {}, com: {}, fotos: {}, obs: '', firma: '' });
     S.rep = S.enc.map(g => g.key);   // por defecto se envía a todos
     S.paso = 1; render();
@@ -418,8 +425,16 @@ function vEquipo() {
   <div><label class="l">Próximo cambio de aceite</label><input inputmode="numeric" value="${esc(S.prox)}" placeholder="${T.med === 'km' ? 'km del adhesivo' : 'horas del adhesivo'}" oninput="S.prox=this.value;pintaInd()"></div></div>
   <div id="ind">${vInd()}</div></div>
   ${T.docs ? `<div class="card"><h3>📄 Documentos del vehículo</h3><p class="m">Fecha de vencimiento de cada uno (mira los papeles en la cabina).</p>
-  ${[['soap', 'Seguro obligatorio (SOAP)'], ['permiso', 'Permiso de circulación'], ['rt', 'Revisión técnica']].map(([k, t]) => { const dv = dias(S[k]);
-    return `<label class="l">${t} ${dv == null ? '' : dv < 0 ? '<span class="badge b-x">VENCIDO</span>' : dv <= DIAS_AVISO ? '<span class="badge b-w">vence en ' + dv + ' días</span>' : '<span class="badge b-ok">vigente</span>'}</label><input type="date" value="${iso(S[k])}" onchange="S.${k}=dd(aFecha(this.value));render()">`; }).join('')}</div>` : ''}`;
+  ${[['soap', 'Seguro obligatorio (SOAP)'], ['permiso', 'Permiso de circulación'], ['rt', 'Revisión técnica']].map(([k, t]) =>
+    `<label class="l">${t}</label><div class="fecha-row"><input id="f-${k}" class="fecha" data-k="${k}" inputmode="numeric" maxlength="10" placeholder="DD-MM-AAAA" value="${esc(S[k])}" oninput="mascaraFecha(this)"><span id="b-${k}">${badgeFecha(S[k])}</span></div>`).join('')}</div>` : ''}`;
+}
+function badgeFecha(v) { const dv = dias(v); return dv == null ? '' : dv < 0 ? '<span class="badge b-x">VENCIDO</span>' : dv <= DIAS_AVISO ? '<span class="badge b-w">vence en ' + dv + ' días</span>' : '<span class="badge b-ok">✅ vigente</span>'; }
+// Escribe solo números: 31032026 → 31-03-2026. No recarga la pantalla.
+function mascaraFecha(el) {
+  const d = el.value.replace(/\D/g, '').slice(0, 8); el.value = d.length > 4 ? d.slice(0, 2) + '-' + d.slice(2, 4) + '-' + d.slice(4) : d.length > 2 ? d.slice(0, 2) + '-' + d.slice(2) : d;
+  const k = el.dataset.k, f = aFecha(el.value), ok = d.length === 8 && f && dd(f) === el.value;
+  S[k] = ok ? el.value : ''; $('#b-' + k).innerHTML = ok ? badgeFecha(el.value) : (d.length === 8 ? '<span class="badge b-x">fecha no válida</span>' : '');
+  guarda(); if (ok) { const sig = { soap: 'f-permiso', permiso: 'f-rt' }[k]; if (sig && $('#' + sig) && !$('#' + sig).value) $('#' + sig).focus(); else el.blur(); } guia(ok);
 }
 function vNuevo() {
   const T = TIPOS[S.tipo];
@@ -489,13 +504,14 @@ function vItem(b, it) {
   <div class="ph"><label>📷 ${f ? 'Cambiar foto' : 'Agregar foto'}<input type="file" accept="image/*" capture="environment" class="hide" onchange="foto('${k}',this)"></label>${f ? `<img src="data:image/jpeg;base64,${f}">` : ''}</div>
   ${v === 'M' && it.crit ? '<div class="info x" style="margin-top:8px">🛑 <b>Ítem crítico en mal estado:</b> el equipo NO debe operar hasta que se repare.</div>' : ''}</div></div>`;
 }
-function marca(k, v) { S.res[k] = v; const sc = window.scrollY; render(); window.scrollTo(0, sc);
+function marca(k, v) { S.res[k] = v; const sc = window.scrollY; render(); window.scrollTo(0, sc); guia(true);
+  if (v === 'R' || v === 'M') setTimeout(() => { const t = document.querySelector('#it-' + k.replace('.', '-') + ' textarea'); if (t && !t.value) t.focus({ preventScroll: true }); }, 450);
   const [bid, iid] = k.split('.'), b = bloques().find(x => x.id === bid), it = b.items.find(x => x.id === iid);
   if (v === 'M' && it.crit) VOZ.say('Atención. ' + it.t + ' es un punto crítico. Si está malo, el equipo no debe operar. Cuenta qué encontraste y saca una foto.');
   else if (v === 'R' || v === 'M') VOZ.say('Cuenta brevemente qué encontraste.');
   else if (b.items.every(x => S.res[bid + '.' + x.id])) VOZ.say('¡Bien! Terminaste esta parte. Toca siguiente.');
   else VOZ.stop(); }
-function todoBien(bid) { const b = bloques().find(x => x.id === bid); b.items.forEach(it => { const k = bid + '.' + it.id; if (!S.res[k]) S.res[k] = 'B'; }); const sc = window.scrollY; render(); window.scrollTo(0, sc); }
+function todoBien(bid) { const b = bloques().find(x => x.id === bid); b.items.forEach(it => { const k = bid + '.' + it.id; if (!S.res[k]) S.res[k] = 'B'; }); const sc = window.scrollY; render(); window.scrollTo(0, sc); guia(true); }
 function achica(file, cb) { const img = new Image(), url = URL.createObjectURL(file);
   img.onload = () => { const m = 1000, r = Math.min(1, m / Math.max(img.width, img.height)), c = document.createElement('canvas');
     c.width = Math.round(img.width * r); c.height = Math.round(img.height * r); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
@@ -558,7 +574,7 @@ function firmaInit() {
   const pos = e => { const b = cv.getBoundingClientRect(), t = e.touches ? e.touches[0] : e; return [t.clientX - b.left, t.clientY - b.top]; };
   const ini = e => { e.preventDefault(); dib = true; const [x, y] = pos(e); cx.beginPath(); cx.moveTo(x, y); };
   const mov = e => { if (!dib) return; e.preventDefault(); const [x, y] = pos(e); cx.lineTo(x, y); cx.stroke(); };
-  const fin = () => { if (dib) { dib = false; S.firma = cv.toDataURL('image/png'); guarda(); } };
+  const fin = () => { if (dib) { dib = false; S.firma = cv.toDataURL('image/png'); guarda(); guia(); } };
   cv.addEventListener('pointerdown', ini); cv.addEventListener('pointermove', mov); window.addEventListener('pointerup', fin);
 }
 function borraFirma() { S.firma = ''; cx && cx.clearRect(0, 0, cv.width, cv.height); guarda(); }
@@ -573,6 +589,46 @@ function vFin() {
   <button class="btn gh" onclick="nuevo()">Revisar otro equipo</button></div><div class="pie">Creado por Daniel Zunino · Integra Prevención SpA</div>`;
 }
 function nuevo() { Object.assign(S, { paso: 1, tipo: '', patente: '', nuevoEq: false, marca: '', anio: '', rampla: '', fotoEq: '', km: '', prox: '', soap: '', permiso: '', rt: '', eqInfo: null, res: {}, com: {}, fotos: {}, obs: '', firma: '', fin: null }); render(); }
+
+// ===================== GUÍA: la manito apunta al siguiente paso =====================
+function objetivo() {
+  const p = S.paso, vacio = el => el && !String(el.value || '').trim();
+  if (p === 0) { if (S._noRut && $('#bInscribir')) return $('#bInscribir'); const r = $('#rut'); return r && r.value.replace(/[^0-9kK]/g, '').length < 8 ? r : $('#bRut'); }
+  if (p === 1) return S.tipo ? $('#bNext') : $('.eq');
+  if (p === 2) { const q = sel => document.querySelector('#app ' + sel);
+    if (!S.nuevoEq && !S.patente) return q('select');
+    if (S.nuevoEq && !patKey(S.patente)) return q('.nuevo input');
+    if (S.nuevoEq && !String(S.marca).trim()) return q('.nuevo .row2 input');
+    if (!String(S.faena).trim()) return q('input[placeholder^="Ej: Predio"]');
+    if (!S.km) return q('input[placeholder="km"],input[placeholder="horas"]');
+    for (const k of ['soap', 'permiso', 'rt']) { const el = q('#f-' + k); if (el && !S[k]) return el; }
+    return $('#bNext'); }
+  if (p >= 3 && p < pasoResumen()) { const b = bloques()[p - 3];
+    for (const it of b.items) { const k = b.id + '.' + it.id, v = S.res[k], box = document.getElementById('it-' + k.replace('.', '-'));
+      if (!v) return box && box.querySelector('.opts'); if ((v === 'R' || v === 'M') && !(S.com[k] || '').trim()) return box && box.querySelector('textarea'); }
+    return $('#bNext'); }
+  if (p === pasoReporte()) return S.firma ? $('#bNext') : $('#cv');
+  if (p === pasoResumen()) return $('#bNext');
+  return null;
+}
+let _guiaT = 0;
+function guia(mover) {
+  clearTimeout(_guiaT); _guiaT = setTimeout(() => {
+    document.querySelectorAll('.pulso').forEach(e => e.classList.remove('pulso'));
+    const m = $('#mano'), el = objetivo(); if (!m) return;
+    if (!el || el.offsetParent === null) { m.classList.remove('on'); return; }
+    el.classList.add('pulso');
+    const enFoot = !!el.closest('#foot');
+    if (mover && !enFoot) { const r = el.getBoundingClientRect(); if (r.top < 90 || r.bottom > innerHeight - 110) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    setTimeout(ponMano, mover ? 420 : 0);
+  }, 60);
+}
+function ponMano() { const m = $('#mano'), el = document.querySelector('.pulso'); if (!m || !el) return;
+  const r = el.getBoundingClientRect(); m.style.left = Math.min(innerWidth - 50, r.left + Math.min(r.width * 0.7, r.width - 20)) + 'px'; m.style.top = (r.bottom - 14) + 'px';
+  if (r.bottom + 40 > innerHeight) m.style.top = (r.top - 46) + 'px', m.textContent = '👇'; else m.textContent = '👆';
+  m.classList.add('on'); }
+addEventListener('scroll', () => requestAnimationFrame(ponMano), { passive: true }); addEventListener('resize', () => guia());
+document.addEventListener('input', () => guia());
 
 // ===================== NAVEGACIÓN =====================
 function validar() {
@@ -593,7 +649,7 @@ function validar() {
 }
 function ir(k) { const el = document.getElementById('it-' + k.replace('.', '-')); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 $('#bBack').onclick = () => { S.paso = Math.max(0, S.paso - 1); render(); };
-$('#bNext').onclick = () => { const e = validar(); if (e) { alertaUI(e); VOZ.say(e); return; } if (S.paso === pasoReporte()) return enviar(); S.paso++; render(); };
+$('#bNext').onclick = () => { const e = validar(); if (e) { alertaUI(e); VOZ.say(e); guia(true); return; } if (S.paso === pasoReporte()) return enviar(); S.paso++; render(); };
 async function enviar() {
   S.enviando = true; render();
   const E = evaluar(), bl = bloques(), T = TIPOS[S.tipo], IN = indicadores();
