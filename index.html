@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chequeo de equipos ZG SpA</title>
+<style>
+:root{--dark:#1E3A2F;--dark2:#2E5E45;--amber:#F2A900;--ok:#2E7D32;--okbg:#E3F4E4;--warn:#E65100;--warnbg:#FFF0E0;--bad:#C62828;--badbg:#FDE3E3;--doc:#6A1B9A;--bg:#F1F5F2;--card:#fff;--txt:#1F2D3A;--mut:#64748B;--line:#E2E8F0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:16px}
+header{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px #0003}
+header .t{font-weight:800;font-size:17px;letter-spacing:.2px}.hrow{display:flex;align-items:center;gap:12px}.logo{height:44px;background:#fff;border-radius:10px;padding:3px 6px}
+.vozb{border:0;background:#ffffff22;color:#fff;font-size:22px;width:44px;height:44px;border-radius:12px;cursor:pointer;flex:0 0 44px}.vozb.off{opacity:.5}
+.oir{border:0;background:#E8F2EC;color:var(--dark2);font-weight:800;font-size:13px;border-radius:9px;padding:5px 9px;cursor:pointer;margin-left:6px}
+.hablando{outline:3px solid var(--amber);outline-offset:2px}header .s{color:var(--amber);font-size:12.5px;font-weight:600;margin-top:2px}
+.prog{height:6px;background:#ffffff30;border-radius:9px;margin-top:10px;overflow:hidden}.prog i{display:block;height:100%;background:var(--amber);width:0;transition:width .3s}
+main{max-width:640px;margin:0 auto;padding:16px 16px 110px}
+.card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px #0001,0 4px 14px #1e3a2f0d}
+h2{margin:4px 0 6px;font-size:20px;color:var(--dark)}h3{margin:0 0 8px;font-size:16px;color:var(--dark)}
+p.m{color:var(--mut);margin:0 0 12px;font-size:14.5px;line-height:1.4}
+label.l{display:block;font-weight:700;font-size:14px;margin:12px 0 5px}
+input,select,textarea{width:100%;font:inherit;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--dark2)}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:800;font-size:17px;background:var(--dark);color:#fff;cursor:pointer;text-align:center}
+.btn.am{background:var(--amber);color:#1b1b1b}.btn.gh{background:#fff;color:var(--dark);border:2px solid var(--line)}.btn:disabled{opacity:.45}
+.foot{position:fixed;left:0;right:0;bottom:0;background:#fffffff2;backdrop-filter:blur(6px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:6}
+.foot .in{max-width:640px;margin:0 auto;display:flex;gap:10px}.foot .btn{padding:14px}.foot .gh{flex:0 0 34%}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:5px 10px;border-radius:99px;margin:3px 4px 3px 0}
+.b-ok{background:var(--okbg);color:var(--ok)}.b-w{background:var(--warnbg);color:var(--warn)}.b-x{background:var(--badbg);color:var(--bad)}.b-n{background:#EEF2F7;color:var(--mut)}
+.eqs{display:grid;gap:10px}
+.eq{display:flex;align-items:center;gap:12px;border:2.5px solid var(--line);border-radius:16px;padding:10px 12px;background:#fff;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.eq svg{flex:0 0 84px;height:54px}.eq b{font-size:16.5px;display:block}.eq span{font-size:13px;color:var(--mut)}
+.eq.sel{border-color:var(--amber);background:#FFF8E5}.eq .sug{font-size:11.5px;font-weight:800;color:var(--ok);display:block;margin-top:3px}
+.pers{display:grid;gap:8px}.per{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;cursor:pointer;font:inherit;color:inherit;text-align:left;width:100%}
+.per .av{width:42px;height:42px;border-radius:50%;background:var(--dark2);color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 42px}.per b{display:block;font-size:15.5px}.per span{font-size:12.5px;color:var(--mut)}
+.per.yo{border-color:var(--amber);background:#FFF8E5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info{background:#E8F2EC;border-radius:12px;padding:10px 12px;font-size:14px;margin-top:10px;line-height:1.45}
+.info.w{background:var(--warnbg)}.info.x{background:var(--badbg)}
+.bh{display:flex;align-items:center;gap:12px;margin-bottom:6px}.bh .ic{font-size:34px;width:52px;height:52px;border-radius:14px;background:#FFF3D1;display:grid;place-items:center}
+.item{border:2px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:#fff;transition:border-color .2s}
+.item.v-B{border-color:#A5D6A7}.item.v-R{border-color:#FFCC80}.item.v-M{border-color:#EF9A9A}.item.v-NA{border-color:#CFD8DC}
+.it-h{display:flex;gap:10px;align-items:flex-start}.it-h .e{font-size:24px;line-height:1}.it-h b{font-size:15.5px}
+.crit{font-size:11px;font-weight:800;color:var(--bad);background:var(--badbg);border-radius:6px;padding:1px 6px;margin-left:4px;white-space:nowrap}
+.tip{font-size:13.5px;color:var(--mut);margin-top:3px;line-height:1.35}
+.why{border:0;background:none;color:var(--dark2);font-weight:700;font-size:13px;padding:4px 0;cursor:pointer}
+.whyt{display:none;font-size:13.5px;background:#FFF8E5;border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.4}.whyt.on{display:block}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.opts button{border:2px solid var(--line);background:#fff;border-radius:11px;padding:9px 2px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;color:var(--mut)}
+.opts button .x{display:block;font-size:20px;margin-bottom:2px}
+.opts .on.B{background:var(--ok);border-color:var(--ok);color:#fff}.opts .on.R{background:var(--warn);border-color:var(--warn);color:#fff}
+.opts .on.M{background:var(--bad);border-color:var(--bad);color:#fff}.opts .on.NA{background:#78909C;border-color:#78909C;color:#fff}
+.det{margin-top:10px;display:none}.det.on{display:block}.det textarea{min-height:58px;font-size:15px}
+.ph{display:flex;align-items:center;gap:10px;margin-top:8px}.ph label{font-size:14px;font-weight:700;color:var(--dark2);cursor:pointer;border:2px dashed #B0BEC5;border-radius:10px;padding:8px 12px}
+.ph img{height:54px;border-radius:8px}
+.sem{border-radius:18px;padding:18px;text-align:center;color:#fff;margin-bottom:14px}
+.sem .r{font-size:30px;font-weight:900;letter-spacing:.5px}.sem .m{font-size:15px;margin-top:4px;opacity:.95}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:#fff;border-radius:14px;padding:12px 6px;text-align:center;box-shadow:0 1px 3px #0001}.kpi b{display:block;font-size:24px}.kpi span{font-size:12px;color:var(--mut);font-weight:700}
+.al{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}.al:last-child{border:0}
+.al i{font-style:normal;font-size:11.5px;font-weight:800;border-radius:6px;padding:2px 7px;height:fit-content;white-space:nowrap}
+.lv-Crítica{background:var(--badbg);color:var(--bad)}.lv-Documento{background:#F3E5F5;color:var(--doc)}.lv-Media{background:var(--warnbg);color:var(--warn)}.lv-Leve{background:#EEF2F7;color:var(--mut)}
+.who{display:flex;align-items:center;gap:12px;padding:11px;border:2px solid var(--line);border-radius:13px;margin-bottom:8px;cursor:pointer;background:#fff}
+.who.on{border-color:var(--dark2);background:#E8F2EC}.who .ck{width:26px;height:26px;border-radius:8px;border:2px solid #B0BEC5;display:grid;place-items:center;font-weight:900;color:#fff;flex:0 0 26px}
+.who.on .ck{background:var(--dark2);border-color:var(--dark2)}.who b{font-size:15px}.who span{display:block;font-size:12.5px;color:var(--mut)}.who.lock{cursor:default}
+canvas{width:100%;height:150px;border:2px dashed #B0BEC5;border-radius:12px;background:#fff;touch-action:none}
+.center{text-align:center}.big{font-size:56px}.mut{color:var(--mut)}.small{font-size:13px}
+.hide{display:none!important}.spin{width:42px;height:42px;border:5px solid #E2E8F0;border-top-color:var(--amber);border-radius:50%;animation:s 1s linear infinite;margin:20px auto}@keyframes s{to{transform:rotate(360deg)}}
+.nuevo{border:2.5px dashed var(--amber);border-radius:14px;padding:12px;margin-top:12px;background:#FFFBF0}
+.pie{text-align:center;color:#94A3B8;font-size:11.5px;margin-top:20px}
+</style>
+</head>
+<body>
+<header><div class="hrow"><img class="logo" id="logo" alt="ZG SpA" src="" style="display:none"><div style="flex:1;min-width:0"><div class="t">Chequeo de equipos</div><div class="s" id="sub">ZG SpA</div></div><button id="bVoz" class="vozb" onclick="togVoz()" aria-label="Voz">🔊</button></div><div class="prog"><i id="bar"></i></div></header>
+<main id="app"><div class="card center"><div class="spin"></div><p class="mut">Cargando…</p></div></main>
+<div class="foot hide" id="foot"><div class="in"><button class="btn gh" id="bBack">← Atrás</button><button class="btn am" id="bNext">Siguiente →</button></div></div>
+
+<script>
+// ===================== CONFIGURACIÓN =====================
+const DIAS_AVISO = 30;               // documentos/licencia: avisar cuando falten menos de 30 días
+const DIAS_SIN_CHEQUEO = 7;          // alerta si el equipo lleva más de 7 días sin chequeo
+const AVISO_KM = 1000, AVISO_H = 25; // aviso de cambio de aceite próximo
+const INTERVALO = { km: 10000, h: 250 };
+// ==========================================================
+
+const SVG = {
+  camioneta: '<svg viewBox="0 0 120 70"><path d="M8 40h22l10-14h26l6 14h40v12H8z" fill="#2E5E45"/><path d="M43 29h20l5 11H37z" fill="#BFE3FF"/><rect x="72" y="34" width="38" height="6" fill="#F2A900"/><circle cx="30" cy="54" r="9" fill="#263238"/><circle cx="30" cy="54" r="4" fill="#B0BEC5"/><circle cx="92" cy="54" r="9" fill="#263238"/><circle cx="92" cy="54" r="4" fill="#B0BEC5"/></svg>',
+  furgon: '<svg viewBox="0 0 120 70"><path d="M6 14h76l20 14 12 6v18H6z" fill="#ECEFF1" stroke="#2E5E45" stroke-width="3"/><path d="M84 18l16 12H84z" fill="#BFE3FF"/><rect x="14" y="24" width="56" height="14" rx="3" fill="#F2A900"/><path d="M22 31h40" stroke="#1E3A2F" stroke-width="3"/><circle cx="28" cy="54" r="9" fill="#263238"/><circle cx="94" cy="54" r="9" fill="#263238"/></svg>',
+  piso: '<svg viewBox="0 0 120 70"><rect x="2" y="12" width="78" height="32" rx="2" fill="#8D6E63"/><path d="M8 38l8-8 8 8 8-8 8 8 8-8 8 8 8-8 8 8" stroke="#F2A900" stroke-width="3" fill="none"/><path d="M84 20h18l14 14v12H84z" fill="#2E5E45"/><rect x="90" y="24" width="12" height="9" rx="2" fill="#BFE3FF"/><circle cx="16" cy="54" r="8" fill="#263238"/><circle cx="34" cy="54" r="8" fill="#263238"/><circle cx="92" cy="54" r="8" fill="#263238"/><circle cx="108" cy="54" r="8" fill="#263238"/></svg>',
+  cama: '<svg viewBox="0 0 120 70"><path d="M4 44h56l6-8h18v10H4z" fill="#455A64"/><path d="M14 30h20v-8l10-6 10 10v8H14z" fill="#F2A900"/><path d="M84 20h18l14 14v12H84z" fill="#2E5E45"/><rect x="90" y="24" width="12" height="9" rx="2" fill="#BFE3FF"/><circle cx="12" cy="54" r="7" fill="#263238"/><circle cx="28" cy="54" r="7" fill="#263238"/><circle cx="92" cy="54" r="8" fill="#263238"/><circle cx="108" cy="54" r="8" fill="#263238"/></svg>',
+  excavadora: '<svg viewBox="0 0 120 70"><rect x="10" y="50" width="62" height="12" rx="6" fill="#263238"/><rect x="18" y="30" width="44" height="18" rx="3" fill="#F2A900"/><rect x="44" y="18" width="16" height="16" rx="2" fill="#2E5E45"/><rect x="47" y="21" width="10" height="8" fill="#BFE3FF"/><path d="M60 30l26-20 22 18" stroke="#F2A900" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M100 26l12 12-12 8z" fill="#455A64"/></svg>',
+  bandit_or: '<svg viewBox="0 0 120 70"><rect x="10" y="50" width="70" height="12" rx="6" fill="#263238"/><rect x="14" y="28" width="52" height="20" rx="3" fill="#F2A900"/><path d="M66 32h22l14 10v6H66z" fill="#C62828"/><path d="M40 28l10-22h10l-6 22" fill="#455A64"/><path d="M54 8l18-6" stroke="#8D6E63" stroke-width="4" stroke-dasharray="3 3"/></svg>',
+  bandit_ru: '<svg viewBox="0 0 120 70"><rect x="14" y="26" width="52" height="20" rx="3" fill="#F2A900"/><path d="M66 30h22l14 10v6H66z" fill="#C62828"/><path d="M40 26l10-20h10l-6 20" fill="#455A64"/><path d="M14 40H2" stroke="#455A64" stroke-width="4"/><circle cx="34" cy="54" r="9" fill="#263238"/><circle cx="34" cy="54" r="4" fill="#B0BEC5"/><circle cx="54" cy="54" r="9" fill="#263238"/><circle cx="54" cy="54" r="4" fill="#B0BEC5"/></svg>',
+  arjes: '<svg viewBox="0 0 120 70"><rect x="6" y="52" width="64" height="11" rx="5" fill="#263238"/><path d="M8 14h50l-8 18H16z" fill="#2E5E45"/><rect x="12" y="32" width="44" height="18" rx="3" fill="#F2A900"/><circle cx="26" cy="41" r="5" fill="#455A64"/><circle cx="42" cy="41" r="5" fill="#455A64"/><path d="M56 44l58-18" stroke="#455A64" stroke-width="7" stroke-linecap="round"/></svg>'
+};
+const TIPOS = {
+  camioneta:  { t: 'Camioneta',                d: 'Camioneta de faena (4x4 o 4x2)',                         lic: ['B'],  med: 'km', docs: true },
+  furgon:     { t: 'Furgón de mantenimiento',  d: 'Furgón con herramientas, soldadura y repuestos',          lic: ['B'],  med: 'km', docs: true },
+  piso:       { t: 'Camión piso caminante',    d: 'Tracto con batea de piso caminante (astilla / biomasa)',  lic: ['A5'], med: 'km', docs: true, rampla: true },
+  cama:       { t: 'Camión cama baja',         d: 'Tracto con cama baja para trasladar maquinaria',          lic: ['A5'], med: 'km', docs: true, rampla: true },
+  excavadora: { t: 'Excavadora',               d: 'Excavadora sobre orugas',                                 lic: ['D'],  med: 'h' },
+  bandit_or:  { t: 'Triturador Bandit orugas', d: 'Astilladora Bandit autopropulsada (orugas)',              lic: ['D'],  med: 'h' },
+  bandit_ru:  { t: 'Triturador Bandit ruedas', d: 'Astilladora Bandit de arrastre (con ruedas)',             lic: ['D'],  med: 'h' },
+  arjes:      { t: 'Triturador Arjes',         d: 'Triturador de ejes lentos Arjes',                         lic: ['D'],  med: 'h' }
+};
+const VEH = t => TIPOS[t] && TIPOS[t].med === 'km';
+const TRIT = t => /bandit|arjes/.test(t);
+// [id, emoji, nombre, ¿qué mirar?, ¿por qué importa?, crítico]
+const I = (id, e, t, tip, why, crit) => ({ id, e, t, tip, why, crit: !!crit });
+
+// ---------- VEHÍCULOS (camioneta, furgón, camiones) ----------
+function bVehExt(t) { const cam = t === 'piso' || t === 'cama'; return { id: 'ext', ic: '🚶', t: 'Vuelta al vehículo', d: 'Camina alrededor antes de subirte. Dos minutos que evitan una pana o un accidente.', items: [
+  I('neum', '🛞', 'Neumáticos y tuercas' + (cam ? ' (tracto y rampla)' : '') + ', incluye repuesto', 'Sin cortes ni globos, con dibujo, bien inflados y sin tuercas sueltas.', 'Un neumático reventado o una rueda suelta hace perder el control del vehículo.', 1),
+  I('luces', '💡', 'Luces: altas, bajas, freno, intermitentes y retroceso', 'Enciéndelas y míralas (o pide ayuda a un compañero).', 'Si no te ven frenar o doblar, te chocan. En camino de tierra con polvo, las luces son tu aviso.', 1),
+  I('fugas', '💧', 'Sin fugas bajo el vehículo', 'Mira el piso: aceite, petróleo, refrigerante o líquido de frenos.', 'Una fuga de frenos o dirección te deja sin control; una de petróleo cerca del escape puede encenderse.', 1),
+  I('espejos', '🪞', 'Espejos', 'Completos, firmes, sin trizaduras y bien regulados.', 'En faena hay personas y maquinaria moviéndose: el punto ciego puede esconder a alguien.'),
+  I('parabrisas', '🪟', 'Parabrisas y limpiaparabrisas', 'Sin trizaduras frente a tus ojos; plumillas y agua funcionan.', 'Con lluvia, barro o polvo, ver bien es frenar a tiempo.'),
+  I('carroceria', '🚚', 'Carrocería, peldaños y manillas', 'Sin piezas sueltas o cortantes; peldaños firmes.', 'Sube y baja siempre con 3 puntos de apoyo: los peldaños deben aguantar.'),
+  ...(cam ? [I('huinchas', '🟥', 'Huinchas reflectantes del tracto y la rampla', 'Completas, pegadas y limpias.', 'De noche o con niebla son lo único que muestra el largo del camión.')] : [])]}; }
+function bVehCab(t) { return { id: 'cab', ic: '🧑‍✈️', t: 'Cabina y mandos', d: 'Ya arriba, con el motor encendido. Prueba todo antes de moverte.', items: [
+  I('frenos', '🛑', 'Frenos y freno de estacionamiento', 'Prueba a baja velocidad. ' + (t === 'piso' || t === 'cama' ? 'Sin fuga de aire ni pérdida de presión.' : 'Pedal firme, no se va al fondo.'), 'Es el sistema que más vidas salva. En caminos forestales con pendiente, si falla no se sale.', 1),
+  I('direccion', '🎯', 'Dirección', 'Sin juego, ruidos ni tirones al girar.', 'Una dirección con juego se descontrola en una curva de ripio.', 1),
+  I('cinturon', '🔒', 'Cinturón de seguridad', 'Engancha, se recoge y no está cortado.', 'En un volcamiento, el cinturón es la diferencia entre vivir o no.', 1),
+  I('alarma', '📢', 'Bocina y alarma de retroceso', 'Ambas suenan fuerte.', 'En faena hay compañeros a pie detrás del vehículo.', 1),
+  I('tablero', '📟', 'Tablero sin luces de falla', 'Ninguna luz roja queda encendida al partir.', 'El vehículo te avisa antes de una falla mayor: escúchalo.'),
+  I('asiento', '💺', 'Asiento', 'Firme y regulado a tu medida.', 'Un asiento suelto te aleja de los pedales en una frenada.')]}; }
+const B_VEH_NIV = { id: 'niv', ic: '🛢️', t: 'Niveles', d: 'Con motor frío y en terreno plano.', items: [
+  I('aceite', '🛢️', 'Aceite de motor', 'Entre mínimo y máximo de la varilla.', 'Sin aceite, el motor se funde en minutos.'),
+  I('refrig', '🌡️', 'Refrigerante del radiador', 'Sobre el mínimo. Nunca abras la tapa en caliente.', 'El vapor del radiador quema gravemente la cara y las manos.'),
+  I('combustible', '⛽', 'Combustible sobre 1/4 (y AdBlue si tiene)', 'Revisa los indicadores del tablero.', 'Quedarse sin petróleo en un camino forestal te deja detenido en un lugar peligroso.'),
+  I('bateria', '🔋', 'Batería y corta corriente', 'Bornes firmes y sin sulfato; corta corriente operativo.', 'El corta corriente evita incendios eléctricos en caso de choque.')]};
+function bVehSeg(t) { return { id: 'seg', ic: '🧯', t: 'Elementos de seguridad', d: 'Lo que necesitas si algo sale mal en ruta o en faena.', items: [
+  I('extintor', '🧯', 'Extintor', 'Manómetro en verde, sello y pasador puestos, fecha vigente y bien sujeto.', 'Un amago en el motor o en un pastizal se apaga en segundos… si el extintor sirve.', 1),
+  I('botiquin', '🩹', 'Botiquín', 'Completo y a mano.', 'En faena la ayuda puede tardar: los primeros minutos son clave.'),
+  I('triangulos', '⚠️', 'Triángulos o conos', 'Mínimo 2, en buen estado.', 'Si quedas detenido en ruta, avisan a los otros conductores.'),
+  I('chaleco', '🦺', 'Chaleco reflectante', 'Disponible en la cabina.', 'Bajarse en ruta sin chaleco es ser invisible.'),
+  I('gata', '🔧', 'Gata, llave de ruedas y cuñas', 'Disponibles y funcionando.', 'Sin ellas, un cambio de rueda se vuelve una maniobra improvisada y peligrosa.')]}; }
+const ESP = {
+  camioneta: { id: 'esp', ic: '🛻', t: 'Camioneta de faena', d: 'Lo propio de una camioneta que entra a predios y caminos forestales.', items: [
+    I('t4x4', '⚙️', 'Tracción 4x4 (si tiene)', 'Engrana y desengrana sin ruidos; la luz del tablero responde.', 'En barro o pendiente, la 4x4 es la que te saca sin quedar atrapado.'),
+    I('carga', '📦', 'Carga en el pick-up amarrada', 'Nada suelto: bidones, herramientas y repuestos sujetos o en caja cerrada.', 'En una frenada, lo suelto vuela contra la cabina o cae al camino.', 1),
+    I('baliza', '🚨', 'Baliza en el techo', 'Enciende y se ve desde lejos.', 'Los camiones y la maquinaria te ven antes en caminos con polvo.'),
+    I('pertiga', '🚩', 'Pértiga con banderín (si la faena la exige)', 'Firme y con banderín visible.', 'En curvas cerradas y caminos angostos marca tu posición sobre los camiones.'),
+    I('barra', '🛡️', 'Barra antivuelco o jaula (si tiene)', 'Sin golpes ni soldaduras cortadas, pernos apretados.', 'Si la camioneta vuelca, protege el espacio de la cabina.')]},
+  furgon: { id: 'esp', ic: '🧰', t: 'Furgón de mantenimiento', d: 'Lo que llevas atrás puede volverse peligroso en una frenada o un choque.', items: [
+    I('estant', '🗄️', 'Estanterías y cajas fijas', 'Firmes al piso o a la pared, con sus puertas o seguros cerrados.', 'Una estantería suelta aplasta a quien va adelante en un choque.', 1),
+    I('herram', '🔨', 'Herramientas guardadas', 'Nada suelto en el piso ni sobre los asientos.', 'Una llave de 2 kg a 60 km/h golpea como un martillo.'),
+    I('cilindros', '🧪', 'Cilindros de gas (oxígeno / acetileno) seguros', 'De pie, amarrados con cadena o abrazadera, con capuchón y válvulas cerradas.', 'Un cilindro que se cae puede romper su válvula y salir disparado o provocar una explosión.', 1),
+    I('soldadura', '🔥', 'Mangueras, reguladores y válvulas antirretroceso', 'Sin grietas, sin olor a gas, bien conectados.', 'Una fuga de acetileno en un furgón cerrado es riesgo de incendio o explosión.', 1),
+    I('bidones', '🛢️', 'Combustibles y lubricantes', 'En bidones rotulados, tapados y amarrados; lejos de la soldadura.', 'Un derrame dentro del furgón más una chispa es un incendio.'),
+    I('equipo', '⚡', 'Generador y máquina soldadora', 'Fijos, cables sin daño y con conexión a tierra.', 'Un cable pelado da descargas eléctricas a quien lo toca.'),
+    I('ventila', '🌬️', 'Ventilación y separación cabina-carga', 'Malla o separador en buen estado; ventilación sin obstruir.', 'Los gases de soldadura y combustible no deben llegar a la cabina.')]},
+  piso: { id: 'esp', ic: '🔗', t: 'Enganche y piso caminante', d: 'Lo más crítico: que la batea vaya bien unida y que la descarga sea segura.', items: [
+    I('quinta', '🔩', 'Quinta rueda y king pin trabados', 'Seguro cerrado; haz la prueba de tirón con la rampla frenada.', 'Una rampla mal enganchada se suelta en movimiento: es un accidente grave.', 1),
+    I('conex', '🔌', 'Mangueras de aire y cable eléctrico', 'Bien conectados, sin fugas ni roces.', 'Sin aire, la rampla no frena.', 1),
+    I('patas', '🦵', 'Patas de apoyo arriba y manivela guardada', 'Totalmente recogidas.', 'Una pata abajo se engancha en el camino y arranca la rampla.', 1),
+    I('hidra', '💧', 'Hidráulica del piso caminante', 'Sin fugas en bomba, cilindros y mangueras; mangueras sin roce.', 'Una manguera que revienta lanza aceite a alta presión: corta la piel y es inflamable.', 1),
+    I('listones', '🟫', 'Listones del piso', 'Sin listones quebrados, levantados ni con pernos sueltos.', 'Un listón levantado traba la descarga y obliga a meterse a la batea.'),
+    I('puerta', '🚪', 'Puerta trasera, bisagras y seguros', 'Abre y cierra bien; seguros trabados en ruta.', 'Una puerta que se abre en ruta bota la astilla sobre otros vehículos.', 1),
+    I('lona', '🎪', 'Lona o malla de cubierta', 'Sin cortes; se cierra desde el suelo con su manivela.', 'Evita que vuele astilla al camino y que tengas que subirte arriba de la carga.'),
+    I('descarga', '🛑', 'Mando de descarga con parada', 'El mando detiene el piso al instante. Nadie dentro de la batea al descargar.', 'El piso caminante arrastra lo que tenga encima: una persona dentro puede quedar atrapada.', 1)]},
+  cama: { id: 'esp', ic: '🔗', t: 'Enganche, rampas y amarre', d: 'Trasladas máquinas de muchas toneladas: el amarre es la clave.', items: [
+    I('quinta', '🔩', 'Quinta rueda y king pin trabados', 'Seguro cerrado; haz la prueba de tirón con la cama frenada.', 'Una cama mal enganchada con una excavadora arriba es una tragedia.', 1),
+    I('conex', '🔌', 'Mangueras de aire y cable eléctrico', 'Bien conectados, sin fugas ni roces.', 'Sin aire, la cama no frena.', 1),
+    I('patas', '🦵', 'Patas de apoyo arriba y manivela guardada', 'Totalmente recogidas.', 'Una pata abajo se engancha en el camino y arranca la cama.', 1),
+    I('rampas', '📐', 'Rampas y sus pasadores', 'Sin grietas; pasadores y seguros puestos al subir y en ruta.', 'Si una rampa se mueve al subir la máquina, la máquina se voltea.', 1),
+    I('amarres', '⛓️', 'Cadenas, tensores y puntos de amarre', 'Mínimo 4 puntos; cadenas y tensores sin eslabones abiertos ni ganchos doblados.', 'Una máquina mal amarrada se desplaza en una curva y vuelca el camión.', 1),
+    I('cunas', '🧱', 'Cuñas para la máquina', 'Disponibles y en buen estado.', 'Bloquean las orugas o ruedas para que la máquina no se corra.'),
+    I('pisocb', '🟫', 'Piso de la cama limpio', 'Sin aceite, barro ni hielo.', 'Con piso resbaloso, la máquina patina al subir.'),
+    I('sobre', '🟧', 'Señalización de sobredimensión', 'Letreros, banderas y balizas disponibles y limpios.', 'Una carga ancha sin señalizar es invisible para los otros conductores.')]},
+};
+const B_VEH_ASEO = { id: 'aseo', ic: '🧽', t: 'Aseo y orden', d: 'El aseo no es estética: cada punto evita un accidente concreto.', aseo: true, items: [
+  I('a_cabina', '🧴', 'Cabina sin objetos sueltos', 'Nada en el piso ni sobre el tablero.', 'Una botella bajo el pedal de freno puede impedir frenar.'),
+  I('a_vidrios', '👀', 'Vidrios y espejos limpios', 'Por dentro y por fuera.', 'Ver bien y que te vean: el polvo y el barro encandilan.'),
+  I('a_focos', '🔦', 'Focos y huinchas limpios', 'Sin barro ni polvo.', 'Un foco con barro alumbra la mitad.'),
+  I('a_peldanos', '🪜', 'Peldaños y piso de cabina sin barro ni aceite', 'Secos y despejados.', 'Las caídas al subir o bajar son de los accidentes más comunes.'),
+  I('a_carga', '🧹', 'Zona de carga ordenada', 'Pick-up, furgón o batea sin restos sueltos.', 'Los restos salen volando al camino o hacen tropezar al cargar.')]};
+
+// ---------- MAQUINARIA (excavadora y trituradores) ----------
+function bMaqExt(t) { return { id: 'mext', ic: '🚶', t: 'Vuelta a la máquina', d: 'Con la máquina apagada, llave sacada y ' + (t === 'excavadora' ? 'balde apoyado en el suelo.' : 'el tambor o los ejes detenidos.'), items: [
+  I('fugas', '💧', 'Sin fugas', 'Aceite hidráulico, combustible o refrigerante bajo la máquina.', 'El aceite en el piso hace resbalar; el hidráulico caliente cerca del escape se enciende.', 1),
+  I('mangueras', '🧵', 'Mangueras y cilindros hidráulicos', 'Sin roces, globos, grietas ni conexiones sueltas.', 'Una manguera que revienta lanza aceite a alta presión: corta la piel como un cuchillo.', 1),
+  I('estructura', '🏗️', 'Estructura y soldaduras', 'Sin grietas, golpes fuertes ni pernos faltantes.', 'Una grieta crece con la vibración hasta que la pieza se corta.'),
+  I('peldanos', '🪜', 'Peldaños y pasamanos', 'Firmes y completos para subir con 3 puntos de apoyo.', 'Caer desde la máquina es una de las lesiones más frecuentes del operador.'),
+  I('guardas', '🛡️', 'Guardas y tapas del motor y ventilador', 'Puestas y aseguradas.', 'Correas y aspas atrapan manos y ropa en un instante.', 1),
+  I('luces', '💡', 'Luces de trabajo y baliza', 'Encienden todas.', 'Con poca luz o neblina te tienen que ver; tú tienes que ver el área.'),
+  I('extintor', '🧯', 'Extintor de la máquina', 'Manómetro en verde, sello puesto, bien sujeto y a mano.', 'La astilla y el aserrín cerca del motor se encienden fácil.', 1)]}; }
+const B_MAQ_NIV = { id: 'mniv', ic: '🛢️', t: 'Niveles y engrase', d: 'Con motor frío y la máquina en terreno plano.', items: [
+  I('aceite', '🛢️', 'Aceite de motor', 'Entre mínimo y máximo de la varilla.', 'Sin aceite, el motor se funde en minutos.'),
+  I('refrig', '🌡️', 'Refrigerante', 'Sobre el mínimo. Nunca abras la tapa en caliente.', 'El vapor del radiador quema gravemente.'),
+  I('hidraulico', '🫗', 'Aceite hidráulico', 'Nivel en el visor dentro del rango.', 'Con poco aceite la máquina responde lento o de golpe.'),
+  I('combustible', '⛽', 'Combustible', 'Suficiente para la jornada. Carga con motor apagado.', 'Cargar con motor encendido o caliente es riesgo de incendio.'),
+  I('filtro', '🌪️', 'Filtro de aire', 'Indicador sin alarma; pre-filtro sin tierra ni astilla.', 'Con el filtro tapado el motor se recalienta.'),
+  I('engrase', '🧈', 'Engrase de pasadores y rodamientos', 'Puntos engrasados según la pauta.', 'Un pasador sin grasa se desgasta y se puede cortar.')]};
+function bMaqFun(t) { const it = [
+  I('paro', '🔴', 'Parada de emergencia', 'Pruébala: el motor o el sistema se detiene al instante.', 'Si alguien queda atrapado, es lo único que lo salva.', 1),
+  I('alarma', '📢', 'Bocina y alarma de traslado / retroceso', 'Suenan fuerte.', 'Avisa a los compañeros a pie que la máquina se mueve.', 1),
+  I('tablero', '📟', 'Tablero sin alarmas', 'Ninguna luz roja ni pitido al encender.', 'La máquina avisa antes de una falla mayor.')];
+  if (t === 'excavadora') it.push(
+    I('bloqueo', '🔐', 'Palanca de bloqueo hidráulico', 'Al subirla, los mandos no mueven nada.', 'Evita que un roce accidental mueva el brazo con alguien cerca.', 1),
+    I('cinturon', '🔒', 'Cinturón de seguridad', 'Engancha y se recoge.', 'Si la excavadora vuelca, el cinturón te mantiene dentro de la cabina protegida.', 1),
+    I('mandos', '🕹️', 'Mandos, giro y freno de giro', 'Responden suave, sin tirones; el giro se detiene donde lo dejas.', 'Un giro que no frena golpea a quien está al lado.'));
+  else it.push(I('remoto', '📡', 'Control remoto (si tiene)', 'Funciona y su botón de parada detiene la máquina.', 'Te permite detener la máquina desde lejos, fuera de la zona de peligro.', 1));
+  return { id: 'mfun', ic: '🕹️', t: 'Prueba de funcionamiento', d: 'Enciende y prueba con el área despejada, sin carga.', items: it }; }
+const LOTO = ' Solo con la máquina apagada, llave sacada y bloqueada con tu candado.';
+const ESP_M = {
+  excavadora: { id: 'esp', ic: '🦾', t: 'Orugas, brazo y balde', d: 'Las partes que trabajan y se desgastan.', items: [
+    I('orugas', '⛓️', 'Orugas, zapatas y rodillos', 'Tensión correcta, sin zapatas sueltas ni pernos faltantes.', 'Una oruga suelta se sale en pendiente y la máquina queda sin control.'),
+    I('acople', '🔩', 'Acople rápido: pasador y seguro', 'Pasador puesto y seguro trabado. Haz la prueba apoyando el balde.', 'Un balde mal acoplado se suelta y cae sobre quien esté cerca.', 1),
+    I('pluma', '🦾', 'Pluma, brazo y pasadores', 'Pasadores con sus seguros, sin juego excesivo ni grietas.', 'Si un pasador sale, el brazo cae de golpe.', 1),
+    I('balde', '🪣', 'Balde y dientes', 'Dientes completos y apretados; sin grietas en el balde.', 'Un diente suelto sale disparado al excavar.'),
+    I('cabina', '🏠', 'Cabina: vidrios, puerta y estructura protectora', 'Vidrios sin trizaduras, puerta traba, estructura sin golpes.', 'La cabina te protege si vuelca o si cae un árbol o una piedra.', 1),
+    I('visib', '🪞', 'Espejos y cámara (si tiene)', 'Completos, limpios y bien regulados.', 'El contrapeso gira y no ves a quien está detrás.')]},
+  bandit_or: null, bandit_ru: null,
+  arjes: { id: 'esp', ic: '⚙️', t: 'Tolva, ejes y cinta', d: 'Un triturador de ejes lentos no perdona: todo se revisa con la máquina bloqueada.', items: [
+    I('tolva', '⚠️', 'Tolva despejada y sin personas', 'Nada atascado. Nunca te subas a la tolva con el motor encendido.', 'Los ejes arrastran todo lo que entra: una persona no se puede soltar.', 1),
+    I('ejes', '🦷', 'Ejes y dientes trituradores', 'Sin dientes quebrados ni pernos sueltos.' + LOTO, 'Un diente suelto puede salir disparado o trabar la máquina.'),
+    I('tapas', '🛡️', 'Tapas y guardas de ejes y transmisión', 'Puestas y aseguradas.', 'Las partes que giran atrapan manos y ropa.', 1),
+    I('reversa', '🔄', 'Reversa automática ante atasco', 'Al trabarse, los ejes se detienen y giran al revés.', 'Evita que alguien intente destrabar a mano.'),
+    I('cinta', '🎞️', 'Cinta transportadora de descarga', 'Banda sin cortes; rodillos con guardas; cuerda o botón de parada funciona.', 'Los rodillos de la cinta atrapan brazos al limpiar: se limpia solo detenida.', 1),
+    I('iman', '🧲', 'Separador magnético (si tiene)', 'Limpio y bien fijado.', 'Retira fierros que dañan la máquina o salen proyectados.'),
+    I('orugas', '⛓️', 'Orugas', 'Tensión correcta y zapatas completas.', 'Una oruga suelta deja la máquina sin control en pendiente.'),
+    I('zona', '🚧', 'Zona de exclusión señalizada', 'Conos o cinta alrededor; nadie a pie cerca de la tolva ni de la descarga.', 'Lo que sale proyectado puede golpear a quien pasa.')]}
+};
+function bBandit(t) { const it = [
+  I('cuchillas', '🔪', 'Cuchillas del tambor / disco', 'Afiladas, sin trizaduras y con pernos apretados.' + LOTO, 'Una cuchilla suelta sale disparada con fuerza mortal.', 1),
+  I('yunque', '📏', 'Yunque (contracuchilla)', 'Ajustado a la distancia correcta y sin desgaste.', 'Un yunque mal ajustado hace saltar la madera hacia el operador.'),
+  I('barra', '🟥', 'Barra de control de alimentación', 'Empujarla detiene y revierte los rodillos al instante.', 'Es la barrera que evita que el operador sea arrastrado dentro de la máquina.', 1),
+  I('rodillos', '🌀', 'Rodillos de alimentación', 'Dientes completos, sin trabas ni ramas enrolladas.', 'Rodillos trabados obligan a empujar la madera con la mano.'),
+  I('capo', '🔒', 'Capó del tambor cerrado con su seguro', 'Cerrado y trabado antes de encender.', 'El tambor sigue girando varios minutos después de apagar la máquina.', 1),
+  I('pasador', '📍', 'Pasador de bloqueo del tambor', 'Disponible y en su lugar para mantenciones.', 'Impide que el tambor gire mientras cambias o revisas cuchillas.', 1),
+  I('canal', '↗️', 'Canal de descarga', 'Firme y apuntando lejos de personas, caminos y cables.', 'La astilla sale a gran velocidad: golpea y ciega.', 1),
+  I('bandeja', '📥', 'Bandeja de alimentación y cortinas de goma', 'Sin daños; cortinas completas.', 'Las cortinas detienen astillas que rebotan hacia el operador.'),
+  I('correas', '⚙️', 'Correas, poleas y sus guardas', 'Tensión correcta, sin grietas; guardas puestas.', 'Las correas atrapan manos y ropa.', 1)];
+  if (t === 'bandit_or') it.push(I('orugas', '⛓️', 'Orugas y mando de traslado', 'Tensión correcta; el mando de traslado responde y se detiene.', 'Al trasladar en pendiente, una oruga suelta deja la máquina sin control.'));
+  else it.push(
+    I('enganche', '🪝', 'Enganche, pasador y cadenas de seguridad', 'Lanza o bola trabada, pasador puesto y cadenas cruzadas.', 'Si el enganche se suelta en ruta, el triturador queda libre en el camino.', 1),
+    I('neumr', '🛞', 'Neumáticos y tuercas del triturador', 'Bien inflados, sin cortes y tuercas apretadas.', 'Una rueda que se sale en traslado provoca un volcamiento.', 1),
+    I('lucesr', '💡', 'Luces y patente del remolque', 'Freno, intermitentes y posición funcionan.', 'En ruta, el vehículo de atrás debe saber que frenas.'),
+    I('estab', '🦵', 'Gata o pata estabilizadora abajo y ruedas calzadas al operar', 'Apoyada en suelo firme; cuñas puestas.', 'La vibración mueve el triturador si no está calzado.', 1));
+  return { id: 'esp', ic: '🌲', t: 'Tambor, alimentación y descarga', d: 'Lo más peligroso del triturador. Revísalo siempre con la máquina detenida y bloqueada.', items: it }; }
+function bEpp(t) { const tr = TRIT(t); return { id: 'epp', ic: '🦺', t: 'Tu equipo de protección', d: 'Antes de operar, revisa lo que llevas puesto.', items: [
+  I('casco', '⛑️', 'Casco', 'Sin golpes ni trizaduras, con barbiquejo.', 'Ramas, piedras y astillas caen o rebotan.'),
+  I('oidos', '🎧', 'Protector auditivo', 'Fonos o tapones limpios y bien puestos.', (tr ? 'Un triturador supera los 100 dB: el daño al oído no tiene vuelta.' : 'El ruido constante daña el oído para siempre.'), tr),
+  I('ojos', '🥽', tr ? 'Lentes y careta facial' : 'Lentes de seguridad', 'Limpios y sin rayas.', 'Una astilla en el ojo puede dejarte ciego.', tr),
+  I('ropa', '👕', 'Ropa ajustada, sin partes sueltas', 'Sin cordones, bufandas, mangas sueltas ni pulseras.', tr ? 'Los rodillos atrapan la ropa suelta y arrastran a la persona hacia la máquina.' : 'La ropa suelta se engancha en palancas y partes que giran.', tr),
+  I('guantes', '🧤', tr ? 'Guantes ajustados (de puño corto)' : 'Guantes', 'En buen estado.', tr ? 'Un guante largo o suelto puede quedar atrapado en la alimentación.' : 'Protegen de cortes y del aceite caliente.'),
+  I('zapatos', '🥾', 'Zapatos de seguridad', 'Con puntera y suela en buen estado.', 'Protegen de golpes y de resbalar en terreno irregular.')]}; }
+const B_MAQ_ASEO = { id: 'aseo', ic: '🧽', t: 'Aseo y orden', d: 'En faena forestal el aseo previene incendios y caídas.', aseo: true, items: [
+  I('a_motor', '🔥', 'Compartimiento del motor sin astilla ni aserrín', 'Sopla o retira lo acumulado cerca del escape y el turbo.', 'La astilla seca sobre el escape caliente es la causa típica de incendio de máquinas.'),
+  I('a_cabina', '🧴', 'Cabina o puesto de mando sin objetos sueltos', 'Nada en el piso ni sobre los mandos.', 'Un objeto bajo un pedal o palanca mueve la máquina sin querer.'),
+  I('a_peldanos', '🪜', 'Peldaños y pasamanos sin barro ni aceite', 'Limpios y secos.', 'El pie se resbala justo al subir o bajar.'),
+  I('a_vidrios', '👀', 'Vidrios, espejos y luces limpios', 'Sin polvo ni barro.', 'Ver y ser visto.'),
+  I('a_area', '🌲', 'Alrededor de la máquina despejado', 'Sin astilla acumulada, ramas ni herramientas tiradas.', 'Tropezar cerca de una máquina en movimiento es muy peligroso.')]};
+
+function bloques() {
+  const t = S.tipo; if (!t) return [];
+  if (VEH(t)) return [bVehExt(t), bVehCab(t), B_VEH_NIV, ESP[t], bVehSeg(t), B_VEH_ASEO];
+  return [bMaqExt(t), ESP_M[t] || bBandit(t), B_MAQ_NIV, bMaqFun(t), bEpp(t), B_MAQ_ASEO];
+}
+
+// ===================== VOZ =====================
+const VOZ = (() => {
+  const ss = window.speechSynthesis; let voz = null, muted = false, tok = 0;
+  try { muted = localStorage.getItem('zg_chequeo_mute') === '1'; } catch (e) {}
+  const RARA = /eloquence|bad news|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|ralph|grandma|grandpa|rocko|sandy|shelley|flo|reed/i;
+  const cal = v => (/natural|neural|online|premium|enhanced|mejorad/i.test(v.name) ? 40 : 0) + (/google/i.test(v.name) ? 15 : 0) + (/CL$/i.test(v.lang.replace('_', '-')) || /chile/i.test(v.name) ? 30 : /419|MX|US|AR|CO|PE/i.test(v.lang) ? 12 : 0);
+  const elegir = () => { if (!ss) return; const vs = ss.getVoices().filter(v => /^es/i.test(v.lang) && !RARA.test(v.name)); if (vs.length) voz = vs.sort((a, b) => cal(b) - cal(a))[0]; };
+  if (ss) { elegir(); ss.onvoiceschanged = elegir;
+    const unlock = () => { try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; ss.speak(u); } catch (e) {} document.removeEventListener('pointerdown', unlock, true); };
+    document.addEventListener('pointerdown', unlock, true); }
+  const DIC = [[/\bSOAP\b/g, 'soap'], [/\bA5\b/g, 'A 5'], [/\b4x4\b/g, 'cuatro por cuatro'], [/\b4x2\b/g, 'cuatro por dos'], [/\bRUT\b/g, 'rut'], [/\bkm\b/g, 'kilómetros'], [/\bdB\b/g, 'decibeles'], [/N°/g, 'número'], [/1\/4/g, 'un cuarto'], [/[«»"“”]/g, ''], [/\s·\s/g, ', ']];
+  const limpiar = t => DIC.reduce((x, [a, b]) => x.replace(a, b), String(t).replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+  function say(texto, el) {
+    const my = ++tok; document.querySelectorAll('.hablando').forEach(e => e.classList.remove('hablando'));
+    if (!ss || muted || !texto) return;
+    const u = new SpeechSynthesisUtterance(limpiar(texto)); if (voz) { u.voice = voz; u.lang = voz.lang; } else u.lang = 'es-ES'; u.rate = 1.02;
+    if (el) { el.classList.add('hablando'); u.onend = u.onerror = () => el.classList.remove('hablando'); }
+    try { ss.cancel(); setTimeout(() => { if (my === tok) { ss.resume(); ss.speak(u); } }, 120); } catch (e) {}
+  }
+  function stop() { tok++; try { ss && ss.cancel(); } catch (e) {} document.querySelectorAll('.hablando').forEach(e => e.classList.remove('hablando')); }
+  function setMute(m) { muted = m; try { localStorage.setItem('zg_chequeo_mute', m ? '1' : '0'); } catch (e) {} if (m) stop(); }
+  return { say, stop, setMute, get muted() { return muted; } };
+})();
+function togVoz() { VOZ.setMute(!VOZ.muted); pintaVoz(); if (!VOZ.muted) VOZ.say('Voz activada. Te iré guiando en el chequeo.'); }
+function pintaVoz() { const b = document.getElementById('bVoz'); if (b) { b.textContent = VOZ.muted ? '🔇' : '🔊'; b.classList.toggle('off', VOZ.muted); } }
+function oirItem(k) { const [bid, iid] = k.split('.'), b = bloques().find(x => x.id === bid), it = b && b.items.find(x => x.id === iid); if (!it) return;
+  VOZ.say(it.t + '. ' + it.tip + ' ¿Por qué importa? ' + it.why + (it.crit ? ' Este punto es crítico: si está malo, el equipo no opera.' : ''), document.getElementById('it-' + k.replace('.', '-'))); }
+function vozPantalla() {
+  const p = S.paso;
+  if (p === 0) return VOZ.say('Hola. Vamos a revisar tu equipo antes de operar. Toca tu nombre en la lista.');
+  if (p === 1) return VOZ.say('Hola ' + S.persona.nombre.split(' ')[0] + '. ¿Qué equipo vas a revisar hoy? Elige el tipo de equipo.');
+  if (p === 2) return VOZ.say('Ahora elige la patente o el código del equipo. Si no está en la lista, agrégalo: el prevencionista lo va a verificar.');
+  if (p < pasoResumen()) { const b = bloques()[p - 3]; return VOZ.say('Parte ' + (p - 2) + ' de ' + nB() + ': ' + b.t + '. ' + (b.d || '') + ' Marca cada punto. Si tienes dudas, toca escuchar.'); }
+  if (p === pasoResumen()) { const E = evaluar(); return VOZ.say('Resultado: ' + E.resultado + '. ' + E.mensaje + (E.al.length ? ' Se encontraron ' + E.al.length + ' alertas.' : ' Sin alertas.')); }
+  if (p === pasoReporte()) return VOZ.say('Último paso. Revisa a quién se envía el informe, firma con el dedo y toca enviar.');
+}
+
+// ===================== ESTADO =====================
+const S = { paso: 0, personas: [], persona: null, enc: [], equipos: [], tipo: '', patente: '', nuevoEq: false, marca: '', anio: '', rampla: '', fotoEq: '', faena: '',
+  km: '', prox: '', soap: '', permiso: '', rt: '', eqInfo: null, res: {}, com: {}, fotos: {}, obs: '', rep: [], firma: '', enviando: false, fin: null };
+const LS = 'zg_chequeo_borrador';
+const guarda = () => { try { const c = Object.assign({}, S); delete c.fin; delete c.enviando; delete c.personas; localStorage.setItem(LS, JSON.stringify(c)); } catch (e) {} };
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const patKey = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const aFecha = s => { let m = String(s || '').match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]); m = String(s || '').match(/(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const dd = d => d ? String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + d.getFullYear() : '';
+const iso = s => { const d = aFecha(s); return d ? d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') : ''; };
+const dias = s => { const d = aFecha(s); if (!d) return null; const h = new Date(); h.setHours(0, 0, 0, 0); return Math.round((d - h) / 864e5); };
+const num = s => Number(String(s || '').replace(/[^\d]/g, '')) || 0;
+const fmtN = n => Math.round(n).toLocaleString('es-CL');
+const ini = n => String(n || '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+const nB = () => bloques().length;
+const pasoResumen = () => 3 + nB(), pasoReporte = () => 4 + nB(), pasoFin = () => 5 + nB();
+// Llamadas al servidor (Apps Script, sin necesidad de cuenta Google)
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztrtYDlqNdL_tWMYlF8DhmvcjlxoN8hsO0xCKZhdqA8cI1fHkH2GBe-Db80LFuSt1MFA/exec';
+const RUTAS = { apiInicio: () => ({ api: 'inicio' }), apiOperador: id => ({ api: 'operador', id }), apiEquipo: p => ({ api: 'equipo', p }) };
+async function api(fn, arg) {
+  let r;
+  if (fn === 'apiGuardar') r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(arg) });
+  else r = await fetch(SCRIPT_URL + '?' + new URLSearchParams(RUTAS[fn](arg)));
+  return r.json();
+}
+
+// ===================== PANTALLAS =====================
+function render() {
+  const p = S.paso, app = $('#app'), foot = $('#foot');
+  $('#bar').style.width = Math.min(100, Math.round(p / pasoFin() * 100)) + '%';
+  $('#sub').textContent = S.tipo ? 'ZG SpA · ' + TIPOS[S.tipo].t.toUpperCase() + (S.patente ? ' ' + patKey(S.patente) : '') : 'ZG SpA · Transportes ZG SpA';
+  foot.classList.toggle('hide', p === 0 || p >= pasoFin());
+  $('#bNext').textContent = p === pasoReporte() ? (S.enviando ? 'Enviando…' : '📤 Enviar informe') : 'Siguiente →';
+  $('#bNext').disabled = S.enviando;
+  if (p === 0) app.innerHTML = vInicio();
+  else if (p === 1) app.innerHTML = vTipo();
+  else if (p === 2) app.innerHTML = vEquipo();
+  else if (p < pasoResumen()) app.innerHTML = vBloque(bloques()[p - 3]);
+  else if (p === pasoResumen()) app.innerHTML = vResumen();
+  else if (p === pasoReporte()) { app.innerHTML = vReporte(); firmaInit(); }
+  else app.innerHTML = vFin();
+  window.scrollTo(0, 0); guarda(); pintaVoz();
+  if (S._ultVoz !== p + '|' + S.tipo) { S._ultVoz = p + '|' + S.tipo; vozPantalla(); }
+}
+function vInicio() {
+  let bor = null, yo = ''; try { bor = JSON.parse(localStorage.getItem(LS) || 'null'); yo = localStorage.getItem('zg_pid') || ''; } catch (e) {}
+  const hay = bor && bor.persona && bor.tipo && bor.paso > 1;
+  const lista = S.personas.slice().sort((a, b) => (b.id === yo) - (a.id === yo));
+  return `<div class="card center"><div class="big">🚜🔧</div><h2>Chequeo antes de operar</h2><p class="m">Revisa tu equipo en unos 5 minutos. Protege tu vida y la de tus compañeros.</p></div>
+  ${hay ? `<div class="card"><h3>📝 Tienes un chequeo sin terminar</h3><p class="m">${esc(bor.persona.nombre)} · ${esc(TIPOS[bor.tipo] ? TIPOS[bor.tipo].t : '')} ${esc(patKey(bor.patente))}</p><button class="btn" onclick="seguir()">Continuar donde quedé</button><div style="height:8px"></div><button class="btn gh" onclick="descartar()">Empezar uno nuevo</button></div>` : ''}
+  <div class="card"><h3>👷 ¿Quién eres? Toca tu nombre</h3>${S.personas.length > 8 ? '<input placeholder="🔎 Buscar…" oninput="filtra(this.value)" style="margin-bottom:10px">' : ''}
+  <div class="pers" id="pers">${lista.map(p => `<button class="per ${p.id === yo ? 'yo' : ''}" data-n="${esc(p.n.toLowerCase())}" onclick="elegirPersona('${p.id}',this)"><div class="av">${esc(ini(p.n))}</div><div><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.e)}</span></div></button>`).join('') || '<div class="mut">No hay trabajadores activos en la nómina.</div>'}</div>
+  <div id="err" class="info x hide"></div><p class="small mut" style="margin-top:12px">¿No apareces? Pide a tu jefatura que te inscriba en la nómina de ZG SpA.</p></div>
+  <div class="pie">Creado por Daniel Zunino · Integra Prevención SpA</div>`;
+}
+function filtra(q) { q = q.toLowerCase().trim(); document.querySelectorAll('#pers .per').forEach(b => b.classList.toggle('hide', !!q && b.dataset.n.indexOf(q) < 0)); }
+function seguir() { try { Object.assign(S, JSON.parse(localStorage.getItem(LS))); } catch (e) {} render(); }
+function descartar() { try { localStorage.removeItem(LS); } catch (e) {} render(); }
+async function elegirPersona(id, btn) {
+  const err = $('#err'); btn.style.opacity = .5; document.querySelectorAll('.per').forEach(b => b.disabled = true);
+  try {
+    const d = await api('apiOperador', id);
+    if (!d.ok) throw 'no';
+    try { localStorage.setItem('zg_pid', id); S.faena = S.faena || localStorage.getItem('zg_faena') || ''; } catch (e) {}
+    Object.assign(S, { persona: d.persona, enc: d.encargados || [], equipos: d.equipos || [], tipo: '', patente: '', nuevoEq: false, res: {}, com: {}, fotos: {}, obs: '', firma: '' });
+    S.rep = S.enc.map(g => g.key);   // por defecto se envía a todos
+    S.paso = 1; render();
+  } catch (e) { err.textContent = 'Sin conexión con el servidor. Intenta de nuevo.'; err.classList.remove('hide'); document.querySelectorAll('.per').forEach(b => { b.disabled = false; b.style.opacity = 1; }); }
+}
+function sugerido(t) {
+  const c = (S.persona.cargo || '').toLowerCase(), l = S.persona.lic || [];
+  if (t === 'camioneta') return /jefe|prevenci|supervisor|secretari/.test(c);
+  if (t === 'furgon') return /mec[aá]nic|soldador|manten/.test(c);
+  if (t === 'piso' || t === 'cama') return /chofer|conductor/.test(c) || l.indexOf('A5') >= 0;
+  if (t === 'excavadora') return /excavadora|maquinaria/.test(c) || /^operador$/.test(c);
+  return /triturador|astillador|maquinaria/.test(c);
+}
+function licEstado(t) {
+  const l = S.persona.lic || [], need = TIPOS[t].lic, tiene = need.some(x => l.indexOf(x) >= 0), dv = dias(S.persona.licVence), veh = VEH(t);
+  const grave = veh ? 'Crítica' : 'Documento';
+  if (!l.length) return { c: 'b-w', t: '⚠️ Licencia no registrada en la nómina', nivel: 'Documento' };
+  if (dv != null && dv < 0) return { c: 'b-x', t: '❌ Licencia vencida el ' + S.persona.licVence, nivel: grave };
+  if (!tiene) return { c: veh ? 'b-x' : 'b-w', t: (veh ? '❌ ' : '⚠️ ') + 'Tu licencia (' + l.join(', ') + ') no es clase ' + need.join(' o ') + (veh ? ': no puedes conducir este equipo' : ': confirma tu autorización interna para operarlo'), nivel: grave };
+  if (dv != null && dv <= DIAS_AVISO) return { c: 'b-w', t: '⚠️ Licencia vence en ' + dv + ' días', nivel: 'Documento' };
+  return { c: 'b-ok', t: '✅ Licencia ' + need.filter(x => l.indexOf(x) >= 0).join('/') + ' vigente' + (S.persona.licVence ? ' hasta ' + S.persona.licVence : ''), nivel: '' };
+}
+function vTipo() {
+  const p = S.persona, orden = Object.keys(TIPOS).sort((a, b) => sugerido(b) - sugerido(a));
+  return `<div class="card"><h2>¡Hola, ${esc(p.nombre.split(' ')[0])}! 👋</h2>
+  <div class="mut small">${esc(p.cargo)} · ${esc(p.empresa)}</div><div style="margin-top:8px">
+  <span class="badge b-n">🪪 ${p.lic && p.lic.length ? 'Licencia ' + esc(p.lic.join(', ')) : 'Sin licencia registrada'}</span>${p.licVence ? `<span class="badge ${dias(p.licVence) < 0 ? 'b-x' : 'b-n'}">Vence ${esc(p.licVence)}</span>` : ''}</div></div>
+  <div class="card"><h3>¿Qué equipo vas a revisar?</h3><div class="eqs">${orden.map(t => `<button class="eq ${S.tipo === t ? 'sel' : ''}" onclick="elegirTipo('${t}')">${SVG[t]}<div><b>${TIPOS[t].t}</b><span>${TIPOS[t].d}</span>${sugerido(t) ? '<span class="sug">★ Sugerido según tu cargo</span>' : ''}</div></button>`).join('')}</div>
+  ${S.tipo ? `<div style="margin-top:12px"><span class="badge ${licEstado(S.tipo).c}">${esc(licEstado(S.tipo).t)}</span></div>` : ''}</div>`;
+}
+function elegirTipo(t) { if (S.tipo !== t) Object.assign(S, { tipo: t, patente: '', nuevoEq: false, marca: '', anio: '', rampla: '', fotoEq: '', eqInfo: null, km: '', prox: '', soap: '', permiso: '', rt: '', res: {}, com: {}, fotos: {} }); render(); }
+function vEquipo() {
+  const T = TIPOS[S.tipo], lista = S.equipos.filter(x => x.t === S.tipo).sort((a, b) => a.p.localeCompare(b.p)), info = S.eqInfo;
+  const sel = S.nuevoEq ? '__nuevo' : S.patente;
+  return `<div class="card"><div class="bh"><div class="ic">${VEH(S.tipo) ? '🚛' : '🚜'}</div><div><h2>Datos del equipo</h2><div class="mut small">${T.t}</div></div></div>
+  <label class="l">${VEH(S.tipo) ? 'Patente' : 'Código o número del equipo'}</label>
+  <select onchange="pickPat(this.value)"><option value="">— Elige de la lista —</option>${lista.map(x => `<option value="${esc(x.p)}" ${!S.nuevoEq && patKey(S.patente) === patKey(x.p) ? 'selected' : ''}>${esc(x.p)}${x.m ? ' · ' + esc(x.m) : ''}${x.e === 'Pendiente' ? ' · ⏳ por verificar' : ''}${x.al ? ' · ⚠️' + x.al : ''}</option>`).join('')}
+  <option value="__nuevo" ${S.nuevoEq ? 'selected' : ''}>➕ Mi equipo no está en la lista</option></select>
+  ${!lista.length && !S.nuevoEq ? '<div class="info">Aún no hay equipos de este tipo inscritos. Elige <b>➕ Mi equipo no está en la lista</b> para agregarlo.</div>' : ''}
+  ${S.nuevoEq ? vNuevo() : `<div id="eqinfo">${info ? vEqInfo(info) : ''}</div>`}
+  ${T.rampla && !S.nuevoEq ? `<label class="l">Patente de la rampla / batea</label><input value="${esc(S.rampla)}" placeholder="Ej: JN6564" style="text-transform:uppercase" oninput="S.rampla=this.value;guarda()">` : ''}
+  <label class="l">Faena o lugar de trabajo</label><input value="${esc(S.faena)}" placeholder="Ej: Predio Los Robles, Cabrero" oninput="S.faena=this.value;try{localStorage.setItem('zg_faena',this.value)}catch(e){};guarda()">
+  <div class="row2"><div><label class="l">${T.med === 'km' ? 'Kilometraje actual' : 'Horómetro actual'}</label><input inputmode="numeric" value="${esc(S.km)}" placeholder="${T.med === 'km' ? 'km' : 'horas'}" oninput="S.km=this.value;pintaInd()"></div>
+  <div><label class="l">Próximo cambio de aceite</label><input inputmode="numeric" value="${esc(S.prox)}" placeholder="${T.med === 'km' ? 'km del adhesivo' : 'horas del adhesivo'}" oninput="S.prox=this.value;pintaInd()"></div></div>
+  <div id="ind">${vInd()}</div></div>
+  ${T.docs ? `<div class="card"><h3>📄 Documentos del vehículo</h3><p class="m">Fecha de vencimiento de cada uno (mira los papeles en la cabina).</p>
+  ${[['soap', 'Seguro obligatorio (SOAP)'], ['permiso', 'Permiso de circulación'], ['rt', 'Revisión técnica']].map(([k, t]) => { const dv = dias(S[k]);
+    return `<label class="l">${t} ${dv == null ? '' : dv < 0 ? '<span class="badge b-x">VENCIDO</span>' : dv <= DIAS_AVISO ? '<span class="badge b-w">vence en ' + dv + ' días</span>' : '<span class="badge b-ok">vigente</span>'}</label><input type="date" value="${iso(S[k])}" onchange="S.${k}=dd(aFecha(this.value));render()">`; }).join('')}</div>` : ''}`;
+}
+function vNuevo() {
+  const T = TIPOS[S.tipo];
+  return `<div class="nuevo"><b>🆕 Agregar equipo</b><p class="m" style="margin:4px 0 0">Haz el chequeo igual. A Daniel Zunino (prevencionista) le llegará una alerta para verificar si el equipo corresponde e inscribirlo.</p>
+  <label class="l">${VEH(S.tipo) ? 'Patente' : 'Código, número o N° de serie'}</label><input value="${esc(S.patente)}" placeholder="${VEH(S.tipo) ? 'Ej: KXPT21' : 'Ej: BANDIT 1890 N°2'}" style="text-transform:uppercase" oninput="S.patente=this.value;guarda()">
+  <div class="row2"><div><label class="l">Marca / modelo</label><input value="${esc(S.marca)}" placeholder="${{ camioneta: 'Ej: Toyota Hilux', furgon: 'Ej: Hyundai H100', piso: 'Ej: Volvo FH', cama: 'Ej: Mercedes Actros', excavadora: 'Ej: CAT 320', bandit_or: 'Ej: Bandit 1990XP', bandit_ru: 'Ej: Bandit 1590', arjes: 'Ej: Arjes VZ 950' }[S.tipo]}" oninput="S.marca=this.value;guarda()"></div>
+  <div><label class="l">Año</label><input inputmode="numeric" value="${esc(S.anio)}" placeholder="Ej: 2019" oninput="S.anio=this.value;guarda()"></div></div>
+  ${T.rampla ? `<label class="l">Patente de la rampla / batea</label><input value="${esc(S.rampla)}" placeholder="Ej: JN6564" style="text-transform:uppercase" oninput="S.rampla=this.value;guarda()">` : ''}
+  <div class="ph"><label>📷 ${S.fotoEq ? 'Cambiar foto del equipo' : 'Foto del equipo'}<input type="file" accept="image/*" capture="environment" class="hide" onchange="fotoEquipo(this)"></label>${S.fotoEq ? `<img src="data:image/jpeg;base64,${S.fotoEq}">` : '<span class="small mut">Ayuda a verificarlo</span>'}</div></div>`;
+}
+function indicadores() {
+  const T = TIPOS[S.tipo], u = T.med, km = num(S.km), px = num(S.prox), U = S.eqInfo && S.eqInfo.ultimo, o = { u };
+  const kmAnt = U ? num(U.km) : 0, fAnt = U ? aFecha(U.f) : null;
+  if (km && kmAnt && km > kmAnt) { o.rec = km - kmAnt; const d = fAnt ? Math.max(1, Math.round((Date.now() - fAnt) / 864e5)) : 0; if (d) o.porDia = o.rec / d; }
+  if (fAnt) o.desde = Math.round((Date.now() - fAnt) / 864e5);
+  if (km && kmAnt && km < kmAnt) o.menor = kmAnt;
+  if (km && px) { o.faltan = px - km; o.faltanTxt = o.faltan > 0 ? 'Faltan ' + fmtN(o.faltan) + ' ' + u : 'Vencido hace ' + fmtN(-o.faltan) + ' ' + u;
+    o.vida = Math.max(0, Math.min(1, o.faltan / INTERVALO[u]));
+    if (o.faltan > 0 && o.porDia) { o.fechaEst = dd(new Date(Date.now() + o.faltan / o.porDia * 864e5)); o.diasEst = Math.round(o.faltan / o.porDia); } }
+  return o;
+}
+function vInd() {
+  if (!S.tipo) return ''; const I = indicadores(), rows = [];
+  if (I.faltanTxt) { const c = I.faltan <= 0 ? 'var(--bad)' : I.faltan <= (I.u === 'km' ? AVISO_KM : AVISO_H) ? 'var(--warn)' : 'var(--ok)';
+    rows.push(`<div><b>🛢️ Cambio de aceite:</b> <b style="color:${c}">${I.faltanTxt}</b>${I.fechaEst ? '<br><span class="small mut">Al ritmo actual toca aprox. el <b>' + I.fechaEst + '</b> (en ' + I.diasEst + ' días)</span>' : ''}
+      <div style="height:9px;background:#E2E8F0;border-radius:9px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${Math.round(I.vida * 100)}%;background:${c}"></i></div></div>`); }
+  if (I.menor) rows.push(`<div style="color:var(--warn)">⚠️ El ${I.u === 'km' ? 'kilometraje' : 'horómetro'} es menor al del último chequeo (${fmtN(I.menor)}). Revísalo.</div>`);
+  if (I.rec) rows.push(`<div>📍 <b>Desde el último chequeo:</b> ${fmtN(I.rec)} ${I.u}${I.porDia ? ' (' + fmtN(I.porDia) + ' ' + I.u + '/día)' : ''}</div>`);
+  return rows.length ? `<div class="info" style="display:grid;gap:10px">${rows.join('')}</div>` : '';
+}
+function pintaInd() { const e = document.getElementById('ind'); if (e) e.innerHTML = vInd(); guarda(); }
+function vEqInfo(i) {
+  if (i.cargando) return '<div class="info">Buscando historial…</div>';
+  let h = '';
+  const e = S.equipos.find(x => patKey(x.p) === patKey(S.patente));
+  if (e && e.hoy) h += `<div class="info w">ℹ️ Este equipo ya fue chequeado hoy por <b>${esc(e.hoy)}</b>. Si cambió de operador, haz tu propio chequeo igual.</div>`;
+  if (!i.nuevo && i.ultimo) { const u = i.ultimo; h += `<div class="info"><b>Último chequeo:</b> ${esc(u.f || '—')} ${u.res ? '· ' + esc(u.res) : ''}${u.op ? ' · ' + esc(u.op) : ''}${u.km ? '<br>Último ' + (TIPOS[S.tipo].med === 'km' ? 'km' : 'horómetro') + ': ' + esc(u.km) : ''}</div>`;
+    if (u.estado === 'Pendiente') h += '<div class="info w">⏳ Este equipo está <b>pendiente de verificación</b> por el prevencionista.</div>'; }
+  if (i.abiertas && i.abiertas.length) h += `<div class="info w"><b>⚠️ Fallas pendientes de este equipo:</b><br>${i.abiertas.slice(0, 6).map(a => '• ' + esc(a.item) + (a.det ? ': ' + esc(a.det) : '') + ' <span class="mut">(' + esc(a.f) + ')</span>').join('<br>')}<br><span class="small">Revisa si ya se repararon.</span></div>`;
+  return h;
+}
+async function pickPat(v) {
+  if (v === '__nuevo') { Object.assign(S, { nuevoEq: true, patente: '', marca: '', anio: '', eqInfo: null }); render(); return; }
+  S.nuevoEq = false; S.patente = v; if (!v) { S.eqInfo = null; render(); return; }
+  const e = S.equipos.find(x => patKey(x.p) === patKey(v)); if (e && e.m) S.marca = e.m;
+  S.eqInfo = { cargando: true }; render();
+  try { const d = await api('apiEquipo', S.patente); S.eqInfo = d;
+    if (d.ultimo) { ['soap', 'permiso', 'rt'].forEach(k => { if (!S[k] && d.ultimo[k]) S[k] = d.ultimo[k]; }); if (!S.marca && d.ultimo.marca) S.marca = String(d.ultimo.marca);
+      if (!S.prox && d.ultimo.prox) S.prox = String(d.ultimo.prox); if (!S.anio && d.ultimo.anio) S.anio = String(d.ultimo.anio); if (!S.rampla && d.ultimo.rampla) S.rampla = String(d.ultimo.rampla); }
+  } catch (e) { S.eqInfo = null; }
+  render();
+}
+function estadoEquipo() { if (S.nuevoEq) return 'Pendiente'; const e = S.equipos.find(x => patKey(x.p) === patKey(S.patente)); return e ? e.e : 'Verificado'; }
+function vBloque(b) {
+  const n = S.paso - 2, tot = nB();
+  return `<div class="card"><div class="bh"><div class="ic">${b.ic}</div><div><div class="mut small">Parte ${n} de ${tot}</div><h2>${esc(b.t)}</h2></div></div>${b.d ? `<p class="m">${esc(b.d)}</p>` : ''}
+  <button class="btn gh" style="padding:10px;font-size:14px" onclick="todoBien('${b.id}')">✅ Marcar todo Bueno</button></div>
+  ${b.items.map(it => vItem(b, it)).join('')}`;
+}
+function vItem(b, it) {
+  const k = b.id + '.' + it.id, v = S.res[k] || '', f = S.fotos[k];
+  const O = [['B', '✅', 'Bueno'], ['R', '⚠️', 'Regular'], ['M', '❌', 'Malo'], ['NA', '➖', 'No aplica']];
+  return `<div class="item ${v ? 'v-' + v : ''}" id="it-${k.replace('.', '-')}"><div class="it-h"><div class="e">${it.e}</div><div style="flex:1"><b>${esc(it.t)}</b>${it.crit ? '<span class="crit">CRÍTICO</span>' : ''}<button class="oir" onclick="oirItem('${k}')">🔊 Escuchar</button>
+  <div class="tip">${esc(it.tip)}</div><button class="why" onclick="const w=this.nextElementSibling;w.classList.toggle('on');if(w.classList.contains('on'))VOZ.say(w.textContent,w)">💡 ¿Por qué importa?</button><div class="whyt">${esc(it.why)}</div></div></div>
+  <div class="opts">${O.map(o => `<button class="${v === o[0] ? 'on ' + o[0] : ''}" onclick="marca('${k}','${o[0]}')"><span class="x">${o[1]}</span>${o[2]}</button>`).join('')}</div>
+  <div class="det ${v === 'R' || v === 'M' ? 'on' : ''}"><textarea placeholder="¿Qué encontraste? (obligatorio)" oninput="S.com['${k}']=this.value;guarda()">${esc(S.com[k] || '')}</textarea>
+  <div class="ph"><label>📷 ${f ? 'Cambiar foto' : 'Agregar foto'}<input type="file" accept="image/*" capture="environment" class="hide" onchange="foto('${k}',this)"></label>${f ? `<img src="data:image/jpeg;base64,${f}">` : ''}</div>
+  ${v === 'M' && it.crit ? '<div class="info x" style="margin-top:8px">🛑 <b>Ítem crítico en mal estado:</b> el equipo NO debe operar hasta que se repare.</div>' : ''}</div></div>`;
+}
+function marca(k, v) { S.res[k] = v; const sc = window.scrollY; render(); window.scrollTo(0, sc);
+  const [bid, iid] = k.split('.'), b = bloques().find(x => x.id === bid), it = b.items.find(x => x.id === iid);
+  if (v === 'M' && it.crit) VOZ.say('Atención. ' + it.t + ' es un punto crítico. Si está malo, el equipo no debe operar. Cuenta qué encontraste y saca una foto.');
+  else if (v === 'R' || v === 'M') VOZ.say('Cuenta brevemente qué encontraste.');
+  else if (b.items.every(x => S.res[bid + '.' + x.id])) VOZ.say('¡Bien! Terminaste esta parte. Toca siguiente.');
+  else VOZ.stop(); }
+function todoBien(bid) { const b = bloques().find(x => x.id === bid); b.items.forEach(it => { const k = bid + '.' + it.id; if (!S.res[k]) S.res[k] = 'B'; }); const sc = window.scrollY; render(); window.scrollTo(0, sc); }
+function achica(file, cb) { const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => { const m = 1000, r = Math.min(1, m / Math.max(img.width, img.height)), c = document.createElement('canvas');
+    c.width = Math.round(img.width * r); c.height = Math.round(img.height * r); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url); cb(c.toDataURL('image/jpeg', 0.7).split(',')[1]); }; img.src = url; }
+function foto(k, inp) { const file = inp.files && inp.files[0]; if (!file) return;
+  if (!S.fotos[k] && Object.keys(S.fotos).length >= 6) { alertaUI('Máximo 6 fotos por chequeo.'); return; }
+  achica(file, b => { S.fotos[k] = b; const sc = window.scrollY; render(); window.scrollTo(0, sc); }); }
+function fotoEquipo(inp) { const file = inp.files && inp.files[0]; if (file) achica(file, b => { S.fotoEq = b; const sc = window.scrollY; render(); window.scrollTo(0, sc); }); }
+function alertaUI(t) { const d = document.createElement('div'); d.className = 'info x'; d.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;z-index:9;box-shadow:0 4px 18px #0003;max-width:600px;margin:auto'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
+
+// ===================== EVALUACIÓN =====================
+function evaluar() {
+  const al = [], okItems = [], bl = bloques(); let pts = 0, max = 0, ap = 0, am = 0;
+  bl.forEach(b => b.items.forEach(it => {
+    const k = b.id + '.' + it.id, v = S.res[k], c = (S.com[k] || '').trim(), w = it.crit ? 2 : 1;
+    if (v === 'B') okItems.push(it.t);
+    if (!v || v === 'NA') return;
+    const p = v === 'B' ? 1 : v === 'R' ? 0.5 : 0;
+    if (b.aseo) { ap += p; am += 1; } else { pts += p * w; max += w; }
+    if (v === 'M') al.push({ nivel: it.crit ? 'Crítica' : 'Media', item: it.t, det: c });
+    if (v === 'R') al.push({ nivel: it.crit ? 'Media' : 'Leve', item: it.t, det: c });
+  }));
+  const le = licEstado(S.tipo); if (le.nivel) al.unshift({ nivel: le.nivel, item: 'Licencia de conducir', det: le.t.replace(/^\S+\s/, '') });
+  if (estadoEquipo() === 'Pendiente') al.push({ nivel: 'Documento', item: 'Equipo pendiente de verificación', det: S.nuevoEq ? 'Agregado hoy por el operador; el prevencionista debe verificar su inscripción' : 'Aún no verificado por el prevencionista' });
+  if (TIPOS[S.tipo].docs) [['soap', 'SOAP'], ['permiso', 'Permiso de circulación'], ['rt', 'Revisión técnica']].forEach(([k, t]) => { const dv = dias(S[k]);
+    if (dv == null) al.push({ nivel: 'Documento', item: t, det: 'Sin fecha registrada' });
+    else if (dv < 0) al.unshift({ nivel: 'Crítica', item: t, det: 'Vencido el ' + S[k] });
+    else if (dv <= DIAS_AVISO) al.push({ nivel: 'Documento', item: t, det: 'Vence el ' + S[k] + ' (' + dv + ' días)' }); });
+  const km = num(S.km), px = num(S.prox), av = TIPOS[S.tipo].med === 'km' ? AVISO_KM : AVISO_H, u = TIPOS[S.tipo].med;
+  if (km && px) { if (km >= px) al.push({ nivel: 'Media', item: 'Cambio de aceite vencido', det: 'Lleva ' + fmtN(km - px) + ' ' + u + ' pasado' });
+    else if (px - km <= av) al.push({ nivel: 'Leve', item: 'Cambio de aceite próximo', det: 'Faltan ' + fmtN(px - km) + ' ' + u }); }
+  const IN = indicadores(); if (IN.desde > DIAS_SIN_CHEQUEO) al.push({ nivel: 'Leve', item: 'Equipo sin chequeo reciente', det: 'Último chequeo hace ' + IN.desde + ' días' });
+  const orden = { 'Crítica': 0, 'Documento': 1, 'Media': 2, 'Leve': 3 }; al.sort((a, b) => orden[a.nivel] - orden[b.nivel]);
+  const crit = al.some(a => a.nivel === 'Crítica'), med = al.some(a => a.nivel === 'Media' || a.nivel === 'Documento');
+  const resultado = crit ? 'NO APTO' : med ? 'APTO CON OBSERVACIONES' : 'APTO';
+  const mensaje = crit ? 'El equipo NO debe operar hasta corregir las fallas críticas. Avisa de inmediato a tu jefatura.' : med ? 'Puede operar con precaución. Las observaciones deben corregirse pronto.' : '¡Equipo en buenas condiciones! Buen trabajo revisándolo.';
+  return { al, okItems, pct: max ? Math.round(pts / max * 100) : 0, aseo: am ? Math.round(ap / am * 100) : null, resultado, mensaje };
+}
+function vResumen() {
+  const E = evaluar(), col = E.resultado === 'NO APTO' ? 'var(--bad)' : E.resultado === 'APTO' ? 'var(--ok)' : 'var(--warn)';
+  const ic = E.resultado === 'NO APTO' ? '🛑' : E.resultado === 'APTO' ? '🟢' : '🟠';
+  return `<div class="sem" style="background:${col}"><div style="font-size:40px">${ic}</div><div class="r">${E.resultado}</div><div class="m">${esc(E.mensaje)}</div></div>
+  <div class="kpis"><div class="kpi"><b style="color:${col}">${E.pct}%</b><span>Cumplimiento</span></div><div class="kpi"><b style="color:${E.aseo == null ? 'var(--mut)' : E.aseo >= 80 ? 'var(--ok)' : E.aseo >= 50 ? 'var(--warn)' : 'var(--bad)'}">${E.aseo == null ? '—' : E.aseo + '%'}</b><span>Aseo</span></div><div class="kpi"><b>${E.al.length}</b><span>Alertas</span></div></div>
+  <div class="card"><h3>🚨 Alertas</h3>${E.al.length ? E.al.map(a => `<div class="al"><i class="lv-${a.nivel}">${a.nivel.toUpperCase()}</i><div><b>${esc(a.item)}</b>${a.det ? '<div class="mut small">' + esc(a.det) + '</div>' : ''}</div></div>`).join('') : '<div class="mut">Sin alertas 🎉</div>'}</div>
+  <div class="card"><h3>📋 Resumen</h3><div class="small" style="line-height:1.7"><b>Operador:</b> ${esc(S.persona.nombre)}<br><b>Equipo:</b> ${esc(TIPOS[S.tipo].t)} · ${esc(patKey(S.patente))}${S.marca ? ' · ' + esc(S.marca) : ''}${estadoEquipo() === 'Pendiente' ? ' <span class="badge b-w">⏳ por verificar</span>' : ''}<br><b>Faena:</b> ${esc(S.faena || '—')}<br><b>${TIPOS[S.tipo].med === 'km' ? 'Kilometraje' : 'Horómetro'}:</b> ${esc(S.km || '—')}</div>${vInd()}
+  <label class="l">Observaciones (opcional)</label><textarea placeholder="Algo más que quieras informar" oninput="S.obs=this.value;guarda()">${esc(S.obs)}</textarea></div>`;
+}
+function vReporte() {
+  const w = g => { const on = g.fijo || S.rep.indexOf(g.key) >= 0;
+    return `<div class="who ${on ? 'on' : ''} ${g.fijo ? 'lock' : ''}" onclick="${g.fijo ? '' : `togRep('${g.key}')`}"><div class="ck">${on ? '✓' : ''}</div><div><b>${esc(g.nombre)}</b><span>${esc(g.cargo)}${g.fijo ? ' · recibe siempre copia' : ''}${!g.mail ? ' · <b style="color:var(--warn)">sin correo registrado</b>' : ''}</span></div></div>`; };
+  return `<div class="card"><div class="bh"><div class="ic">📤</div><div><h2>¿A quién reportas?</h2><div class="mut small">Toca para marcar o desmarcar</div></div></div>${S.enc.map(w).join('')}</div>
+  <div class="card"><h3>✍️ Tu firma</h3><p class="m">Firmas que revisaste el equipo y que lo informado es real.</p><canvas id="cv"></canvas><button class="why" onclick="borraFirma()">Borrar firma</button></div>`;
+}
+function togRep(k) { const i = S.rep.indexOf(k); if (i >= 0) S.rep.splice(i, 1); else S.rep.push(k); const sc = window.scrollY, f = S.firma; render(); S.firma = f; window.scrollTo(0, sc); }
+let cv, cx, dib = false;
+function firmaInit() {
+  cv = $('#cv'); if (!cv) return; const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = r.width * dpr; cv.height = r.height * dpr; cx = cv.getContext('2d'); cx.scale(dpr, dpr); cx.lineWidth = 2.4; cx.lineCap = 'round'; cx.strokeStyle = '#1E3A2F';
+  if (S.firma) { const im = new Image(); im.onload = () => cx.drawImage(im, 0, 0, r.width, r.height); im.src = S.firma; }
+  const pos = e => { const b = cv.getBoundingClientRect(), t = e.touches ? e.touches[0] : e; return [t.clientX - b.left, t.clientY - b.top]; };
+  const ini = e => { e.preventDefault(); dib = true; const [x, y] = pos(e); cx.beginPath(); cx.moveTo(x, y); };
+  const mov = e => { if (!dib) return; e.preventDefault(); const [x, y] = pos(e); cx.lineTo(x, y); cx.stroke(); };
+  const fin = () => { if (dib) { dib = false; S.firma = cv.toDataURL('image/png'); guarda(); } };
+  cv.addEventListener('pointerdown', ini); cv.addEventListener('pointermove', mov); window.addEventListener('pointerup', fin);
+}
+function borraFirma() { S.firma = ''; cx && cx.clearRect(0, 0, cv.width, cv.height); guarda(); }
+function vFin() {
+  const f = S.fin || {};
+  if (!f.ok) return `<div class="card center"><div class="spin"></div><p>Generando informe…</p></div>`;
+  return `<div class="card center"><div class="big">${f.resultado === 'NO APTO' ? '🛑' : '🎉'}</div><h2>¡Chequeo enviado!</h2>
+  <p class="m">Código <b>${esc(f.codigo)}</b>${f.enviados && f.enviados.length ? '<br>Informe enviado a: ' + esc(f.enviados.join(', ')) : ''}${f.sinCorreo && f.sinCorreo.length ? '<br><span style="color:var(--warn)">Sin correo registrado: ' + esc(f.sinCorreo.join(', ')) + ' (avísales tú)</span>' : ''}</p>
+  ${f.nuevo ? '<div class="info w" style="text-align:left">🆕 El equipo quedó <b>pendiente de verificación</b>. Daniel Zunino recibió la alerta para revisarlo.</div><div style="height:10px"></div>' : ''}
+  ${f.resultado === 'NO APTO' ? '<div class="info x" style="text-align:left">🛑 <b>No operes este equipo.</b> Avisa de inmediato a tu jefatura.</div><div style="height:10px"></div>' : ''}
+  <a class="btn" href="${esc(f.link)}" target="_blank" style="text-decoration:none">📄 Ver informe PDF</a><div style="height:10px"></div>
+  <button class="btn gh" onclick="nuevo()">Revisar otro equipo</button></div><div class="pie">Creado por Daniel Zunino · Integra Prevención SpA</div>`;
+}
+function nuevo() { Object.assign(S, { paso: 1, tipo: '', patente: '', nuevoEq: false, marca: '', anio: '', rampla: '', fotoEq: '', km: '', prox: '', soap: '', permiso: '', rt: '', eqInfo: null, res: {}, com: {}, fotos: {}, obs: '', firma: '', fin: null }); render(); }
+
+// ===================== NAVEGACIÓN =====================
+function validar() {
+  const p = S.paso, T = TIPOS[S.tipo];
+  if (p === 1 && !S.tipo) return 'Elige el equipo que vas a revisar.';
+  if (p === 2) { if (!patKey(S.patente)) return S.nuevoEq ? 'Escribe la patente o código del equipo nuevo.' : 'Elige el equipo de la lista o agrégalo.';
+    if (S.nuevoEq && !S.marca.trim()) return 'Indica la marca o modelo del equipo nuevo.';
+    if (S.nuevoEq && S.equipos.some(x => patKey(x.p) === patKey(S.patente))) return 'Ese equipo ya está en la lista: elígelo ahí.';
+    if (!S.faena.trim()) return 'Indica la faena o lugar de trabajo.';
+    if (!S.km) return 'Indica el ' + (T.med === 'km' ? 'kilometraje' : 'horómetro') + '.';
+    if (T.docs && (!S.soap || !S.permiso || !S.rt)) return 'Completa las 3 fechas de documentos. Si no las encuentras, avisa a tu jefatura.'; }
+  if (p >= 3 && p < pasoResumen()) { const b = bloques()[p - 3];
+    for (const it of b.items) { const k = b.id + '.' + it.id, v = S.res[k];
+      if (!v) { ir(k); return 'Falta revisar: ' + it.t; }
+      if ((v === 'R' || v === 'M') && !(S.com[k] || '').trim()) { ir(k); return 'Cuenta brevemente qué encontraste en: ' + it.t; } } }
+  if (p === pasoReporte() && !S.firma) return 'Falta tu firma.';
+  return '';
+}
+function ir(k) { const el = document.getElementById('it-' + k.replace('.', '-')); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+$('#bBack').onclick = () => { S.paso = Math.max(0, S.paso - 1); render(); };
+$('#bNext').onclick = () => { const e = validar(); if (e) { alertaUI(e); VOZ.say(e); return; } if (S.paso === pasoReporte()) return enviar(); S.paso++; render(); };
+async function enviar() {
+  S.enviando = true; render();
+  const E = evaluar(), bl = bloques(), T = TIPOS[S.tipo], IN = indicadores();
+  const fotos = Object.keys(S.fotos).map(k => { const [b, i] = k.split('.'), bb = bl.find(x => x.id === b), it = bb && bb.items.find(x => x.id === i); return { item: it ? it.t : k, b64: S.fotos[k] }; });
+  const body = { pid: S.persona.id, tipo: S.tipo, patente: S.patente, nuevo: S.nuevoEq, marca: S.marca, anio: S.anio, rampla: patKey(S.rampla), fotoEquipo: S.nuevoEq ? S.fotoEq : '',
+    faena: S.faena, km: S.km, prox: S.prox, med: T.med, docs: !!T.docs, soap: T.docs ? S.soap : '', permiso: T.docs ? S.permiso : '', rt: T.docs ? S.rt : '',
+    aceiteTxt: IN.faltanTxt ? IN.faltanTxt + (IN.fechaEst ? ' (aprox. ' + IN.fechaEst + ')' : '') : '',
+    resultado: E.resultado, mensaje: E.mensaje, pct: E.pct, aseo: E.aseo, alertas: E.al, okItems: E.okItems, obs: S.obs, reportar: S.rep, firma: S.firma, fotos,
+    bloques: bl.map(b => ({ t: b.t, items: b.items.map(it => ({ t: it.t, crit: it.crit, v: S.res[b.id + '.' + it.id] || '', c: S.com[b.id + '.' + it.id] || '' })) })) };
+  S.paso = pasoFin(); S.fin = null; render();
+  try {
+    const d = await api('apiGuardar', body);
+    if (!d.ok) throw d.error || 'error';
+    S.fin = Object.assign(d, { resultado: E.resultado }); S.enviando = false; try { localStorage.removeItem(LS); } catch (e) {}
+    $('#app').innerHTML = vFin(); $('#foot').classList.add('hide'); $('#bar').style.width = '100%';
+    VOZ.say(E.resultado === 'NO APTO' ? 'Chequeo enviado. Recuerda: no operes este equipo y avisa de inmediato a tu jefatura.' : '¡Chequeo enviado! Gracias por revisar tu equipo. Trabaja seguro.');
+  } catch (e) { S.enviando = false; S.paso = pasoReporte(); render(); alertaUI('No se pudo enviar (' + e + '). Revisa tu señal e intenta de nuevo: tu chequeo está guardado.'); }
+}
+// Arranque: nómina y logo desde el servidor (o aprobación de un equipo nuevo desde el correo)
+(async () => {
+  const q = new URLSearchParams(location.search);
+  if (q.get('aprobar')) {
+    try { const d = await fetch(SCRIPT_URL + '?' + new URLSearchParams({ api: 'aprobar', tok: q.get('aprobar'), ok: q.get('ok') })).then(r => r.json());
+      $('#app').innerHTML = `<div class="card center"><div class="big">${!d.ok ? '⚠️' : d.aprobado ? '✅' : '❌'}</div><h2>Verificación de equipo</h2><p class="m" style="font-size:16px">${esc(d.msg || d.error || '')}</p><a class="btn gh" href="${location.pathname}" target="_self" style="text-decoration:none">Ir al chequeo</a></div>`;
+    } catch (e) { $('#app').innerHTML = '<div class="card info x">No se pudo conectar con el servidor. Intenta de nuevo.</div>'; }
+    return;
+  }
+  try { const L = localStorage.getItem('zg_logo'); if (L) { $('#logo').src = L; $('#logo').style.display = ''; } } catch (e) {}
+  try { const d = await api('apiInicio'); S.personas = d.personas || [];
+    if (d.logo) { $('#logo').src = d.logo; $('#logo').style.display = ''; try { localStorage.setItem('zg_logo', d.logo); } catch (e) {} }
+    render();
+  } catch (e) { $('#app').innerHTML = '<div class="card info x">No se pudo conectar con el servidor. Revisa tu señal y vuelve a abrir el enlace.</div>'; }
+})();
+</script>
+</body>
+</html>
