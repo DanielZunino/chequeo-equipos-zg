@@ -64,7 +64,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--dark2)}
 .who.on{border-color:var(--dark2);background:#E8F2EC}.who .ck{width:26px;height:26px;border-radius:8px;border:2px solid #B0BEC5;display:grid;place-items:center;font-weight:900;color:#fff;flex:0 0 26px}
 .who.on .ck{background:var(--dark2);border-color:var(--dark2)}.who b{font-size:15px}.who span{display:block;font-size:12.5px;color:var(--mut)}.who.lock{cursor:default}
 canvas{width:100%;height:150px;border:2px dashed #B0BEC5;border-radius:12px;background:#fff;touch-action:none}
-.center{text-align:center}.big{font-size:56px}.mut{color:var(--mut)}.small{font-size:13px}
+.center{text-align:center}.hero{width:min(300px,86%);height:auto;display:block;margin:4px auto 2px}.big{font-size:56px}.mut{color:var(--mut)}.small{font-size:13px}
 .hide{display:none!important}.spin{width:42px;height:42px;border:5px solid #E2E8F0;border-top-color:var(--amber);border-radius:50%;animation:s 1s linear infinite;margin:20px auto}@keyframes s{to{transform:rotate(360deg)}}
 .nuevo{border:2.5px dashed var(--amber);border-radius:14px;padding:12px;margin-top:12px;background:#FFFBF0}
 .pie{text-align:center;color:#94A3B8;font-size:11.5px;margin-top:20px}
@@ -107,8 +107,8 @@ const TIPOS = {
   piso:       { t: 'Camión piso caminante',    d: 'Tracto con batea de piso caminante (astilla / biomasa)',  lic: ['A5'], med: 'km', docs: true, rampla: true },
   cama:       { t: 'Camión cama baja',         d: 'Tracto con cama baja para trasladar maquinaria',          lic: ['A5'], med: 'km', docs: true, rampla: true },
   excavadora: { t: 'Excavadora',               d: 'Excavadora sobre orugas',                                 lic: ['D'],  med: 'h' },
-  bandit_or:  { t: 'Triturador Bandit orugas', d: 'Moledora Bandit Beast 2660T (orugas)',              lic: ['D'],  med: 'h' },
-  bandit_ru:  { t: 'Triturador Bandit ruedas', d: 'Moledora Bandit Beast 2660 (arrastre, con ruedas)',             lic: ['D'],  med: 'h' },
+  bandit_or:  { t: 'Triturador Bandit orugas', d: 'Triturador de biomasa Bandit Beast 2660T (orugas)',              lic: ['D'],  med: 'h' },
+  bandit_ru:  { t: 'Triturador Bandit ruedas', d: 'Triturador de biomasa Bandit Beast 2660 (de arrastre, con ruedas)',             lic: ['D'],  med: 'h' },
   arjes:      { t: 'Triturador Arjes',         d: 'Triturador de ejes lentos Arjes',                         lic: ['D'],  med: 'h' }
 };
 const VEH = t => TIPOS[t] && TIPOS[t].med === 'km';
@@ -135,7 +135,7 @@ function bVehCab(t) { return { id: 'cab', ic: '🧑‍✈️', t: 'Cabina y mand
 const B_VEH_NIV = { id: 'niv', ic: '🛢️', t: 'Niveles', d: 'Con motor frío y en terreno plano.', items: [
   I('aceite', '🛢️', 'Aceite de motor', 'Entre mínimo y máximo de la varilla.', 'Sin aceite, el motor se funde en minutos.'),
   I('refrig', '🌡️', 'Refrigerante del radiador', 'Sobre el mínimo. Nunca abras la tapa en caliente.', 'El vapor del radiador quema gravemente la cara y las manos.'),
-  I('combustible', '⛽', 'Combustible sobre 1/4 (y AdBlue si tiene)', 'Revisa los indicadores del tablero.', 'Quedarse sin petróleo en un camino forestal te deja detenido en un lugar peligroso.'),
+  I('combustible', '⛽', 'Petróleo sobre 1/4 (y AdBlue si tiene)', 'Revisa los indicadores del tablero.', 'Quedarse sin petróleo en un camino forestal te deja detenido en un lugar peligroso.'),
   I('bateria', '🔋', 'Batería y corta corriente', 'Bornes firmes y sin sulfato; corta corriente operativo.', 'El corta corriente evita incendios eléctricos en caso de choque.')]};
 function bVehSeg(t) { return { id: 'seg', ic: '🧯', t: 'Elementos de seguridad', d: 'Lo que necesitas si algo sale mal en ruta o en faena.', items: [
   I('extintor', '🧯', 'Extintor', 'Manómetro en verde, sello y pasador puestos, fecha vigente y bien sujeto.', 'Un amago en el motor o en un pastizal se apaga en segundos… si el extintor sirve.', 1),
@@ -145,8 +145,8 @@ function bVehSeg(t) { return { id: 'seg', ic: '🧯', t: 'Elementos de seguridad
   I('gata', '🔧', 'Gata, llave de ruedas y cuñas', 'Disponibles y funcionando.', 'Sin ellas, un cambio de rueda se vuelve una maniobra improvisada y peligrosa.')]}; }
 const ESP = {
   camioneta: { id: 'esp', ic: '🛻', t: 'Camioneta de faena', d: 'Lo propio de una camioneta que entra a predios y caminos forestales.', items: [
-    I('t4x4', '⚙️', 'Tracción 4x4 (si tiene)', 'Engrana y desengrana sin ruidos; la luz del tablero responde.', 'En barro o pendiente, la 4x4 es la que te saca sin quedar atrapado.'),
-    I('carga', '📦', 'Carga en el pick-up amarrada', 'Nada suelto: bidones, herramientas y repuestos sujetos o en caja cerrada.', 'En una frenada, lo suelto vuela contra la cabina o cae al camino.', 1),
+    I('t4x4', '⚙️', 'Doble tracción 4x4 (si tiene)', 'Entra y sale sin ruidos; se enciende la luz en el tablero.', 'En barro o en una cuesta de ripio, la 4x4 es la que te saca sin quedar enterrado.'),
+    I('carga', '📦', 'Carga en la pickup amarrada', 'Nada suelto: bidones, herramientas y repuestos sujetos o en caja cerrada.', 'En una frenada, lo suelto vuela contra la cabina o cae al camino.', 1),
     I('baliza', '🚨', 'Baliza en el techo', 'Enciende y se ve desde lejos.', 'Los camiones y la maquinaria te ven antes en caminos con polvo.'),
     I('pertiga', '🚩', 'Pértiga con banderín (si la faena la exige)', 'Firme y con banderín visible.', 'En curvas cerradas y caminos angostos marca tu posición sobre los camiones.'),
     I('barra', '🛡️', 'Barra antivuelco o jaula (si tiene)', 'Sin golpes ni soldaduras cortadas, pernos apretados.', 'Si la camioneta vuelca, protege el espacio de la cabina.')]},
@@ -159,30 +159,30 @@ const ESP = {
     I('equipo', '⚡', 'Generador y máquina soldadora', 'Fijos, cables sin daño y con conexión a tierra.', 'Un cable pelado da descargas eléctricas a quien lo toca.'),
     I('ventila', '🌬️', 'Ventilación y separación cabina-carga', 'Malla o separador en buen estado; ventilación sin obstruir.', 'Los gases de soldadura y combustible no deben llegar a la cabina.')]},
   piso: { id: 'esp', ic: '🔗', t: 'Enganche y piso caminante', d: 'Lo más crítico: que la batea vaya bien unida y que la descarga sea segura.', items: [
-    I('quinta', '🔩', 'Quinta rueda y king pin trabados', 'Seguro cerrado; haz la prueba de tirón con la rampla frenada.', 'Una rampla mal enganchada se suelta en movimiento: es un accidente grave.', 1),
+    I('quinta', '🔩', 'Quinta rueda y perno rey (king pin) trabados', 'Seguro cerrado; haz la prueba de tirón con la rampla frenada.', 'Una rampla mal enganchada se suelta en movimiento: es un accidente grave.', 1),
     I('conex', '🔌', 'Mangueras de aire y cable eléctrico', 'Bien conectados, sin fugas ni roces.', 'Sin aire, la rampla no frena.', 1),
     I('patas', '🦵', 'Patas de apoyo arriba y manivela guardada', 'Totalmente recogidas.', 'Una pata abajo se engancha en el camino y arranca la rampla.', 1),
     I('hidra', '💧', 'Hidráulica del piso caminante', 'Sin fugas en bomba, cilindros y mangueras; mangueras sin roce.', 'Una manguera que revienta lanza aceite a alta presión: corta la piel y es inflamable.', 1),
     I('listones', '🟫', 'Listones del piso', 'Sin listones quebrados, levantados ni con pernos sueltos.', 'Un listón levantado traba la descarga y obliga a meterse a la batea.'),
     I('puerta', '🚪', 'Puerta trasera, bisagras y seguros', 'Abre y cierra bien; seguros trabados en ruta.', 'Una puerta que se abre en ruta bota la astilla sobre otros vehículos.', 1),
-    I('lona', '🎪', 'Lona o malla de cubierta', 'Sin cortes; se cierra desde el suelo con su manivela.', 'Evita que vuele astilla al camino y que tengas que subirte arriba de la carga.'),
+    I('lona', '🎪', 'Carpa o malla de la batea', 'Sin rajaduras; se cierra desde el suelo con su manivela.', 'Evita que vuele astilla al camino y que tengas que subirte arriba de la carga a carpar.'),
     I('descarga', '🛑', 'Mando de descarga con parada', 'El mando detiene el piso al instante. Nadie dentro de la batea al descargar.', 'El piso caminante arrastra lo que tenga encima: una persona dentro puede quedar atrapada.', 1)]},
   cama: { id: 'esp', ic: '🔗', t: 'Enganche, rampas y amarre', d: 'Trasladas máquinas de muchas toneladas: el amarre es la clave.', items: [
-    I('quinta', '🔩', 'Quinta rueda y king pin trabados', 'Seguro cerrado; haz la prueba de tirón con la cama frenada.', 'Una cama mal enganchada con una excavadora arriba es una tragedia.', 1),
+    I('quinta', '🔩', 'Quinta rueda y perno rey (king pin) trabados', 'Seguro cerrado; haz la prueba de tirón con la cama frenada.', 'Una cama mal enganchada con una excavadora arriba es una tragedia.', 1),
     I('conex', '🔌', 'Mangueras de aire y cable eléctrico', 'Bien conectados, sin fugas ni roces.', 'Sin aire, la cama no frena.', 1),
     I('patas', '🦵', 'Patas de apoyo arriba y manivela guardada', 'Totalmente recogidas.', 'Una pata abajo se engancha en el camino y arranca la cama.', 1),
     I('rampas', '📐', 'Rampas y sus pasadores', 'Sin grietas; pasadores y seguros puestos al subir y en ruta.', 'Si una rampa se mueve al subir la máquina, la máquina se voltea.', 1),
-    I('amarres', '⛓️', 'Cadenas, tensores y puntos de amarre', 'Mínimo 4 puntos; cadenas y tensores sin eslabones abiertos ni ganchos doblados.', 'Una máquina mal amarrada se desplaza en una curva y vuelca el camión.', 1),
-    I('cunas', '🧱', 'Cuñas para la máquina', 'Disponibles y en buen estado.', 'Bloquean las orugas o ruedas para que la máquina no se corra.'),
-    I('pisocb', '🟫', 'Piso de la cama limpio', 'Sin aceite, barro ni hielo.', 'Con piso resbaloso, la máquina patina al subir.'),
-    I('sobre', '🟧', 'Señalización de sobredimensión', 'Letreros, banderas y balizas disponibles y limpios.', 'Una carga ancha sin señalizar es invisible para los otros conductores.')]},
+    I('amarres', '⛓️', 'Cadenas, trinquetes y puntos de amarre', 'Mínimo 4 puntos; cadenas y trinquetes sin eslabones abiertos ni ganchos doblados.', 'Una máquina mal amarrada se desplaza en una curva y vuelca el camión.', 1),
+    I('cunas', '🧱', 'Calzos o cuñas para la máquina', 'Disponibles y en buen estado.', 'Bloquean las orugas o ruedas para que la máquina no se corra.'),
+    I('pisocb', '🟫', 'Piso de la cama limpio', 'Sin aceite, barro ni escarcha.', 'Con piso resbaloso, la máquina patina al subir.'),
+    I('sobre', '🟧', 'Señalización de carga sobredimensionada', 'Letrero CARGA ANCHA, banderas rojas y balizas disponibles y limpios.', 'Una carga ancha sin señalizar es invisible para los otros conductores.')]},
 };
 const B_VEH_ASEO = { id: 'aseo', ic: '🧽', t: 'Aseo y orden', d: 'El aseo no es estética: cada punto evita un accidente concreto.', aseo: true, items: [
   I('a_cabina', '🧴', 'Cabina sin objetos sueltos', 'Nada en el piso ni sobre el tablero.', 'Una botella bajo el pedal de freno puede impedir frenar.'),
   I('a_vidrios', '👀', 'Vidrios y espejos limpios', 'Por dentro y por fuera.', 'Ver bien y que te vean: el polvo y el barro encandilan.'),
   I('a_focos', '🔦', 'Focos y huinchas limpios', 'Sin barro ni polvo.', 'Un foco con barro alumbra la mitad.'),
   I('a_peldanos', '🪜', 'Peldaños y piso de cabina sin barro ni aceite', 'Secos y despejados.', 'Las caídas al subir o bajar son de los accidentes más comunes.'),
-  I('a_carga', '🧹', 'Zona de carga ordenada', 'Pick-up, furgón o batea sin restos sueltos.', 'Los restos salen volando al camino o hacen tropezar al cargar.')]};
+  I('a_carga', '🧹', 'Zona de carga ordenada', 'Pickup, furgón o batea sin restos sueltos.', 'Los restos salen volando al camino o hacen tropezar al cargar.')]};
 
 // ---------- MAQUINARIA (excavadora y trituradores) ----------
 function bMaqExt(t) { return { id: 'mext', ic: '🚶', t: 'Vuelta a la máquina', d: 'Con la máquina apagada, llave sacada y ' + (t === 'excavadora' ? 'balde apoyado en el suelo.' : 'el tambor o los ejes detenidos.'), items: [
@@ -197,7 +197,7 @@ const B_MAQ_NIV = { id: 'mniv', ic: '🛢️', t: 'Niveles y engrase', d: 'Con m
   I('aceite', '🛢️', 'Aceite de motor', 'Entre mínimo y máximo de la varilla.', 'Sin aceite, el motor se funde en minutos.'),
   I('refrig', '🌡️', 'Refrigerante', 'Sobre el mínimo. Nunca abras la tapa en caliente.', 'El vapor del radiador quema gravemente.'),
   I('hidraulico', '🫗', 'Aceite hidráulico', 'Nivel en el visor dentro del rango.', 'Con poco aceite la máquina responde lento o de golpe.'),
-  I('combustible', '⛽', 'Combustible', 'Suficiente para la jornada. Carga con motor apagado.', 'Cargar con motor encendido o caliente es riesgo de incendio.'),
+  I('combustible', '⛽', 'Petróleo', 'Suficiente para la jornada. Carga con motor apagado.', 'Cargar con motor encendido o caliente es riesgo de incendio.'),
   I('filtro', '🌪️', 'Filtro de aire', 'Indicador sin alarma; pre-filtro sin tierra ni astilla.', 'Con el filtro tapado el motor se recalienta.'),
   I('engrase', '🧈', 'Engrase de pasadores y rodamientos', 'Puntos engrasados según la pauta.', 'Un pasador sin grasa se desgasta y se puede cortar.')]};
 function bMaqFun(t) { const it = [
@@ -210,51 +210,51 @@ function bMaqFun(t) { const it = [
     I('mandos', '🕹️', 'Mandos, giro y freno de giro', 'Responden suave, sin tirones; el giro se detiene donde lo dejas.', 'Un giro que no frena golpea a quien está al lado.'));
   else it.push(I('remoto', '📡', 'Control remoto (si tiene)', 'Funciona y su botón de parada detiene la máquina.', 'Te permite detener la máquina desde lejos, fuera de la zona de peligro.', 1));
   return { id: 'mfun', ic: '🕹️', t: 'Prueba de funcionamiento', d: 'Enciende y prueba con el área despejada, sin carga.', items: it }; }
-const LOTO = ' Solo con la máquina apagada, llave sacada y bloqueada con tu candado.';
+const LOTO = ' Solo con la máquina apagada, llave sacada y bloqueada con tu candado y tarjeta.';
 const ESP_M = {
   excavadora: { id: 'esp', ic: '🦾', t: 'Orugas, brazo y balde', d: 'Las partes que trabajan y se desgastan.', items: [
     I('orugas', '⛓️', 'Orugas, zapatas y rodillos', 'Tensión correcta, sin zapatas sueltas ni pernos faltantes.', 'Una oruga suelta se sale en pendiente y la máquina queda sin control.'),
     I('acople', '🔩', 'Acople rápido: pasador y seguro', 'Pasador puesto y seguro trabado. Haz la prueba apoyando el balde.', 'Un balde mal acoplado se suelta y cae sobre quien esté cerca.', 1),
-    I('pluma', '🦾', 'Pluma, brazo y pasadores', 'Pasadores con sus seguros, sin juego excesivo ni grietas.', 'Si un pasador sale, el brazo cae de golpe.', 1),
+    I('pluma', '🦾', 'Pluma, brazo y pasadores', 'Pasadores con sus chavetas o seguros, sin juego excesivo ni grietas.', 'Si un pasador sale, el brazo cae de golpe.', 1),
     I('balde', '🪣', 'Balde y dientes', 'Dientes completos y apretados; sin grietas en el balde.', 'Un diente suelto sale disparado al excavar.'),
     I('cabina', '🏠', 'Cabina: vidrios, puerta y estructura protectora', 'Vidrios sin trizaduras, puerta traba, estructura sin golpes.', 'La cabina te protege si vuelca o si cae un árbol o una piedra.', 1),
     I('visib', '🪞', 'Espejos y cámara (si tiene)', 'Completos, limpios y bien regulados.', 'El contrapeso gira y no ves a quien está detrás.')]},
   bandit_or: null, bandit_ru: null,
-  arjes: { id: 'esp', ic: '⚙️', t: 'Tolva, ejes y cinta', d: 'Un triturador de ejes lentos no perdona: todo se revisa con la máquina bloqueada.', items: [
+  arjes: { id: 'esp', ic: '⚙️', t: 'Tolva, ejes y correa', d: 'Un triturador de ejes lentos no perdona: todo se revisa con la máquina bloqueada.', items: [
     I('tolva', '⚠️', 'Tolva despejada y sin personas', 'Nada atascado. Nunca te subas a la tolva con el motor encendido.', 'Los ejes arrastran todo lo que entra: una persona no se puede soltar.', 1),
     I('ejes', '🦷', 'Ejes y dientes trituradores', 'Sin dientes quebrados ni pernos sueltos.' + LOTO, 'Un diente suelto puede salir disparado o trabar la máquina.'),
     I('tapas', '🛡️', 'Tapas y guardas de ejes y transmisión', 'Puestas y aseguradas.', 'Las partes que giran atrapan manos y ropa.', 1),
     I('reversa', '🔄', 'Reversa automática ante atasco', 'Al trabarse, los ejes se detienen y giran al revés.', 'Evita que alguien intente destrabar a mano.'),
-    I('cinta', '🎞️', 'Cinta transportadora de descarga', 'Banda sin cortes; rodillos con guardas; cuerda o botón de parada funciona.', 'Los rodillos de la cinta atrapan brazos al limpiar: se limpia solo detenida.', 1),
+    I('cinta', '🎞️', 'Correa transportadora de descarga', 'Correa sin cortes; rodillos con guardas; cuerda o botón de parada funciona.', 'Los rodillos de la correa atrapan brazos al limpiar: se limpia solo detenida.', 1),
     I('iman', '🧲', 'Separador magnético (si tiene)', 'Limpio y bien fijado.', 'Retira fierros que dañan la máquina o salen proyectados.'),
     I('orugas', '⛓️', 'Orugas', 'Tensión correcta y zapatas completas.', 'Una oruga suelta deja la máquina sin control en pendiente.'),
-    I('zona', '🚧', 'Zona de exclusión señalizada', 'Conos o cinta alrededor; nadie a pie cerca de la tolva ni de la descarga.', 'Lo que sale proyectado puede golpear a quien pasa.')]}
+    I('zona', '🚧', 'Zona de exclusión señalizada', 'Conos o huincha de peligro alrededor; nadie a pie cerca de la tolva ni de la descarga.', 'Lo que sale proyectado puede golpear a quien pasa.')]}
 };
 function bBandit(t) { const it = [
-  I('zona', '🚧', 'Zona de exclusión señalizada', 'Conos o cinta alrededor. Nadie a pie frente a la boca ni a los lados de la cinta mientras muele.', 'La Beast lanza trozos de madera, piedras y fierros a gran distancia por la boca del rotor.', 1),
-  I('carga', '🚜', 'Zona de carga despejada', 'La excavadora o cargador carga desde un lado; nadie cerca de la tolva ni de la cinta de alimentación.', 'Quien carga y quien está a pie deben estar separados: un tronco que cae aplasta.'),
-  I('nadie', '⚠️', 'Nadie sube a la tolva ni a la cinta de alimentación', 'Nunca, ni para destrabar o limpiar, con el motor encendido.', 'La cinta y el rodillo alimentador arrastran a la persona hacia el rotor.', 1),
+  I('zona', '🚧', 'Zona de exclusión señalizada', 'Conos o huincha de peligro alrededor. Nadie a pie frente a la boca ni a los lados de la correa mientras tritura.', 'El triturador lanza trozos de madera, piedras y fierros lejos por la boca del rotor.', 1),
+  I('carga', '🪵', 'Zona de carga despejada', 'La excavadora o el cargador frontal carga desde un lado; nadie cerca de la tolva ni de la correa de alimentación.', 'Quien carga y quien está a pie deben estar separados: un tronco que cae aplasta.'),
+  I('nadie', '⚠️', 'Nadie se sube a la tolva ni a la correa de alimentación', 'Nunca, ni para destrabar o limpiar, con el motor encendido.', 'La correa y el rodillo alimentador arrastran a la persona hacia el rotor.', 1),
   I('dientes', '🔨', 'Rotor: dientes / martillos y sus pernos', 'Completos, sin quebrados y con pernos apretados.' + LOTO, 'Un diente que se suelta sale proyectado con fuerza mortal.', 1),
-  I('parrillas', '🔲', 'Parrillas (cribas) y yunque', 'Bien fijadas, sin grietas ni pernos sueltos.', 'Una parrilla suelta se rompe dentro del rotor y sale disparada.', 1),
-  I('cortinas', '🧱', 'Cortinas o flaps anti-proyección', 'Completas, sin cortes, cubriendo la boca de alimentación.', 'Frenan lo que el rotor lanza hacia atrás, hacia la zona de carga.', 1),
-  I('alimentacion', '🎞️', 'Cinta de alimentación y rodillo alimentador', 'Listones y cadena completos; el rodillo sube y baja libre; sin material enredado.', 'Si la alimentación se traba, la tentación es destrabar a mano: eso nunca.'),
-  I('descarga', '↗️', 'Cinta de descarga', 'Banda sin cortes; rodillos con guardas; cuerda o botón de parada funciona.', 'Los rodillos de la cinta atrapan brazos al limpiar: se limpia solo detenida y bloqueada.', 1),
+  I('parrillas', '🔲', 'Harneros (parrillas) y yunque', 'Bien apernados, sin grietas ni pernos sueltos.', 'Un harnero suelto se rompe dentro del rotor y sale disparado.', 1),
+  I('cortinas', '🧱', 'Cortinas de cadena o goma anti-proyección', 'Completas, sin cortes, cubriendo la boca de alimentación.', 'Frenan lo que el rotor lanza hacia atrás, hacia la zona de carga.', 1),
+  I('alimentacion', '🎞️', 'Correa de alimentación y rodillo alimentador', 'Listones y cadena completos; el rodillo sube y baja libre; sin material enredado.', 'Si la alimentación se traba, la tentación es destrabar a mano: eso nunca.'),
+  I('descarga', '↗️', 'Correa de descarga', 'Correa sin cortes; rodillos con guardas; cuerda o botón de parada funciona.', 'Los rodillos de la correa atrapan brazos al limpiar: se limpia solo detenida y bloqueada.', 1),
   I('iman', '🧲', 'Imán de descarga (si tiene)', 'Limpio y bien fijado.', 'Saca fierros y clavos del producto y evita que dañen el rotor.'),
   I('bloqueos', '📍', 'Bloqueos del rotor y del rodillo alimentador', 'Pasadores o trabas disponibles para mantención; kit de candado y tarjeta a mano.', 'El rotor sigue girando varios minutos después de apagar: sin bloqueo no se mete la mano.', 1),
   I('capo', '🔒', 'Capó y tapas del rotor cerrados con seguro', 'Cerrados y trabados antes de encender.', 'Abrir con el rotor girando es exponerse a una proyección directa.', 1),
   I('embrague', '⚙️', 'Embrague, correas y sus guardas', 'Embrague responde; correas sin grietas; guardas puestas.', 'Las correas y poleas atrapan manos y ropa.', 1)];
   if (t === 'bandit_or') it.push(I('orugas', '⛓️', 'Orugas y control remoto de traslado', 'Tensión correcta, zapatas completas; el remoto mueve y detiene la máquina.', 'Al trasladar en pendiente, una oruga suelta deja la máquina sin control.', 1));
   else it.push(
-    I('enganche', '🪝', 'Enganche, pasador y cadenas de seguridad', 'Lanza o bola trabada, pasador puesto y cadenas cruzadas.', 'Si el enganche se suelta en ruta, la Beast (varias toneladas) queda libre en el camino.', 1),
+    I('enganche', '🪝', 'Enganche, pasador y cadenas de seguridad', 'Lanza bien enganchada, pasador con su chaveta y cadenas cruzadas.', 'Si se suelta en ruta, el triturador (varias toneladas) queda suelto en el camino.', 1),
     I('neumr', '🛞', 'Neumáticos y tuercas del triturador', 'Bien inflados, sin cortes y tuercas apretadas.', 'Una rueda que se sale en traslado provoca un volcamiento.', 1),
     I('lucesr', '💡', 'Luces y patente del remolque', 'Freno, intermitentes y posición funcionan.', 'En ruta, el vehículo de atrás debe saber que frenas.'),
     I('estab', '🦵', 'Gata o pata estabilizadora abajo y ruedas calzadas al operar', 'Apoyada en suelo firme; cuñas puestas.', 'La vibración mueve el triturador si no está calzado.', 1));
-  return { id: 'esp', ic: '🌲', t: 'Bandit Beast: carga, rotor y descarga', d: 'Moledora horizontal Bandit Beast 2660. Revisa las partes internas siempre con la máquina detenida y bloqueada.', items: it }; }
-function bEpp(t) { const tr = TRIT(t); return { id: 'epp', ic: '🦺', t: 'Tu equipo de protección', d: 'Antes de operar, revisa lo que llevas puesto.', items: [
+  return { id: 'esp', ic: '🌲', t: 'Bandit Beast: carga, rotor y descarga', d: 'Triturador de biomasa Bandit Beast 2660. Las partes internas se revisan siempre con la máquina detenida y bloqueada con candado.', items: it }; }
+function bEpp(t) { const tr = TRIT(t); return { id: 'epp', ic: '🦺', t: 'Tus EPP', d: 'Antes de operar, revisa tus elementos de protección personal.', items: [
   I('casco', '⛑️', 'Casco', 'Sin golpes ni trizaduras, con barbiquejo.', 'Ramas, piedras y astillas caen o rebotan.'),
-  I('oidos', '🎧', 'Protector auditivo', 'Fonos o tapones limpios y bien puestos.', (tr ? 'Una moledora o triturador supera los 100 dB: el daño al oído no tiene vuelta.' : 'El ruido constante daña el oído para siempre.'), tr),
+  I('oidos', '🎧', 'Fonos o tapones auditivos', 'Limpios y bien puestos.', (tr ? 'Un triturador supera los 100 dB: la sordera no tiene vuelta.' : 'El ruido constante daña el oído para siempre.'), tr),
   I('ojos', '🥽', tr ? 'Lentes y careta facial' : 'Lentes de seguridad', 'Limpios y sin rayas.', 'Una astilla en el ojo puede dejarte ciego.', tr),
-  I('ropa', '👕', 'Ropa ajustada, sin partes sueltas', 'Sin cordones, bufandas, mangas sueltas ni pulseras.', tr ? 'Cintas, rodillos y correas atrapan la ropa suelta y arrastran a la persona.' : 'La ropa suelta se engancha en palancas y partes que giran.', tr),
+  I('ropa', '👕', 'Ropa ajustada, sin partes sueltas', 'Sin cordones, bufandas, cuellos sueltos, mangas sueltas ni pulseras.', tr ? 'Correas transportadoras, rodillos y poleas atrapan la ropa suelta y arrastran a la persona.' : 'La ropa suelta se engancha en palancas y partes que giran.', tr),
   I('guantes', '🧤', 'Guantes', 'En buen estado y ajustados.', 'Protegen de cortes, astillas y del aceite caliente.'),
   I('zapatos', '🥾', 'Zapatos de seguridad', 'Con puntera y suela en buen estado.', 'Protegen de golpes y de resbalar en terreno irregular.')]}; }
 const B_MAQ_ASEO = { id: 'aseo', ic: '🧽', t: 'Aseo y orden', d: 'En faena forestal el aseo previene incendios y caídas.', aseo: true, items: [
@@ -355,7 +355,20 @@ function render() {
 function vInicio() {
   let bor = null, ult = ''; try { bor = JSON.parse(localStorage.getItem(LS) || 'null'); ult = localStorage.getItem('zg_rut') || ''; } catch (e) {}
   const hay = bor && bor.persona && bor.tipo && bor.paso > 1;
-  return `<div class="card center"><div class="big">🚜🔧</div><h2>Chequeo antes de operar</h2><p class="m">Revisa tu equipo en unos 5 minutos. Protege tu vida y la de tus compañeros.</p></div>
+  return `<div class="card center"><div><svg class="hero" viewBox="0 0 260 130" aria-label="Máquina forestal">
+<path d="M0 116h260v14H0z" fill="#8D6E63"/><path d="M0 112h260v6H0z" fill="#6D9F5B"/>
+<g fill="#2E5E45"><path d="M18 112l14-34 14 34z"/><path d="M22 92l10-26 10 26z"/><path d="M226 112l14-38 14 38z"/><path d="M230 90l10-28 10 28z"/></g>
+<rect x="31" y="104" width="2" height="8" fill="#5D4037"/><rect x="239" y="104" width="2" height="8" fill="#5D4037"/>
+<rect x="62" y="98" width="96" height="16" rx="8" fill="#263238"/><g fill="#546E7A"><circle cx="72" cy="106" r="5"/><circle cx="92" cy="106" r="5"/><circle cx="112" cy="106" r="5"/><circle cx="132" cy="106" r="5"/><circle cx="148" cy="106" r="5"/></g>
+<rect x="66" y="78" width="88" height="20" rx="4" fill="#F2A900"/><rect x="60" y="80" width="14" height="16" rx="3" fill="#455A64"/>
+<rect x="112" y="52" width="34" height="28" rx="4" fill="#1E3A2F"/><rect x="117" y="56" width="24" height="15" rx="2" fill="#BFE3FF"/>
+<path d="M150 80l26-46 34 14" stroke="#F2A900" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M174 38l10 6" stroke="#455A64" stroke-width="4"/><rect x="204" y="44" width="10" height="16" rx="2" fill="#455A64"/>
+<path d="M199 62c0-8 20-8 20 0" stroke="#455A64" stroke-width="5" fill="none"/>
+<g><rect x="168" y="64" width="84" height="10" rx="5" fill="#A1887F"/><rect x="164" y="72" width="88" height="10" rx="5" fill="#8D6E63"/>
+<circle cx="168" cy="69" r="5" fill="#D7B899" stroke="#8D6E63" stroke-width="2"/><circle cx="164" cy="77" r="5" fill="#D7B899" stroke="#8D6E63" stroke-width="2"/></g>
+<path d="M200 60v24M218 60v24" stroke="#455A64" stroke-width="4" stroke-linecap="round"/>
+</svg></div><h2>Chequeo antes de operar</h2><p class="m">Revisa tu equipo en unos 5 minutos. Protege tu vida y la de tus compañeros.</p></div>
   ${hay ? `<div class="card"><h3>📝 Tienes un chequeo sin terminar</h3><p class="m">${esc(bor.persona.nombre)} · ${esc(TIPOS[bor.tipo] ? TIPOS[bor.tipo].t : '')} ${esc(patKey(bor.patente))}</p><button class="btn" id="bSeguir" onclick="seguir()">Continuar donde quedé</button><div style="height:8px"></div><button class="btn gh" onclick="descartar()">Empezar uno nuevo</button></div>` : ''}
   <div class="card"><h3>🪪 Escribe tu RUT</h3><p class="m">Sin puntos ni guion, se ordena solo.</p>
   <input id="rut" inputmode="text" autocomplete="off" autocapitalize="characters" placeholder="12.345.678-9" value="${esc(ult)}" oninput="mascaraRut(this)" onkeydown="if(event.key==='Enter')entrarRut()">
@@ -413,7 +426,7 @@ function elegirTipo(t) { if (S.tipo !== t) Object.assign(S, { tipo: t, patente: 
 function vEquipo() {
   const T = TIPOS[S.tipo], lista = S.equipos.filter(x => x.t === S.tipo).sort((a, b) => a.p.localeCompare(b.p)), info = S.eqInfo;
   const sel = S.nuevoEq ? '__nuevo' : S.patente;
-  return `<div class="card"><div class="bh"><div class="ic">${VEH(S.tipo) ? '🚛' : '🚜'}</div><div><h2>Datos del equipo</h2><div class="mut small">${T.t}</div></div></div>
+  return `<div class="card"><div class="bh"><div class="ic">${VEH(S.tipo) ? '🚛' : '🌲'}</div><div><h2>Datos del equipo</h2><div class="mut small">${T.t}</div></div></div>
   <label class="l">${VEH(S.tipo) ? 'Patente' : 'Código o número del equipo'}</label>
   <select onchange="pickPat(this.value)"><option value="">— Elige de la lista —</option>${lista.map(x => `<option value="${esc(x.p)}" ${!S.nuevoEq && patKey(S.patente) === patKey(x.p) ? 'selected' : ''}>${esc(x.p)}${x.m ? ' · ' + esc(x.m) : ''}${x.e === 'Pendiente' ? ' · ⏳ por verificar' : ''}${x.al ? ' · ⚠️' + x.al : ''}</option>`).join('')}
   <option value="__nuevo" ${S.nuevoEq ? 'selected' : ''}>➕ Mi equipo no está en la lista</option></select>
