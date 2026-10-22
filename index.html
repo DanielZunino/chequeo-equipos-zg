@@ -288,7 +288,7 @@ function oirItem(k) { const [bid, iid] = k.split('.'), b = bloques().find(x => x
   VOZ.say(it.t + '. ' + it.tip + ' ¿Por qué importa? ' + it.why + (it.crit ? ' Este punto es crítico: si está malo, el equipo no opera.' : ''), document.getElementById('it-' + k.replace('.', '-'))); }
 function vozPantalla() {
   const p = S.paso;
-  if (p === 0) return VOZ.say('Hola. Vamos a revisar tu equipo antes de operar. Toca tu nombre en la lista.');
+  if (p === 0) return VOZ.say('Hola. Vamos a revisar tu equipo antes de operar. Escribe tu rut, o toca tu nombre en la lista.');
   if (p === 1) return VOZ.say('Hola ' + S.persona.nombre.split(' ')[0] + '. ¿Qué equipo vas a revisar hoy? Elige el tipo de equipo.');
   if (p === 2) return VOZ.say('Ahora elige la patente o el código del equipo. Si no está en la lista, agrégalo: el prevencionista lo va a verificar.');
   if (p < pasoResumen()) { const b = bloques()[p - 3]; return VOZ.say('Parte ' + (p - 2) + ' de ' + nB() + ': ' + b.t + '. ' + (b.d || '') + ' Marca cada punto. Si tienes dudas, toca escuchar.'); }
@@ -347,7 +347,8 @@ function vInicio() {
   const lista = S.personas.slice().sort((a, b) => (b.id === yo) - (a.id === yo));
   return `<div class="card center"><div class="big">🚜🔧</div><h2>Chequeo antes de operar</h2><p class="m">Revisa tu equipo en unos 5 minutos. Protege tu vida y la de tus compañeros.</p></div>
   ${hay ? `<div class="card"><h3>📝 Tienes un chequeo sin terminar</h3><p class="m">${esc(bor.persona.nombre)} · ${esc(TIPOS[bor.tipo] ? TIPOS[bor.tipo].t : '')} ${esc(patKey(bor.patente))}</p><button class="btn" onclick="seguir()">Continuar donde quedé</button><div style="height:8px"></div><button class="btn gh" onclick="descartar()">Empezar uno nuevo</button></div>` : ''}
-  <div class="card"><h3>👷 ¿Quién eres? Toca tu nombre</h3>${S.personas.length > 8 ? '<input placeholder="🔎 Buscar…" oninput="filtra(this.value)" style="margin-bottom:10px">' : ''}
+  <div class="card"><h3>🪪 Entra con tu RUT</h3><div style="display:flex;gap:8px"><input id="rut" inputmode="text" autocomplete="off" placeholder="12.345.678-9" onkeydown="if(event.key==='Enter')entrarRut()"><button class="btn am" id="bRut" style="width:auto;padding:12px 18px" onclick="entrarRut()">Entrar</button></div><div id="errRut" class="info x hide"></div></div>
+  <div class="card"><h3>👷 …o toca tu nombre</h3>${S.personas.length > 8 ? '<input placeholder="🔎 Buscar…" oninput="filtra(this.value)" style="margin-bottom:10px">' : ''}
   <div class="pers" id="pers">${lista.map(p => `<button class="per ${p.id === yo ? 'yo' : ''}" data-n="${esc(p.n.toLowerCase())}" onclick="elegirPersona('${p.id}',this)"><div class="av">${esc(ini(p.n))}</div><div><b>${esc(p.n)}</b><span>${esc(p.c)} · ${esc(p.e)}</span></div></button>`).join('') || '<div class="mut">No hay trabajadores activos en la nómina.</div>'}</div>
   <div id="err" class="info x hide"></div><p class="small mut" style="margin-top:12px">¿No apareces? Pide a tu jefatura que te inscriba en la nómina de ZG SpA.</p></div>
   <div class="pie">Creado por Daniel Zunino · Integra Prevención SpA</div>`;
@@ -355,16 +356,23 @@ function vInicio() {
 function filtra(q) { q = q.toLowerCase().trim(); document.querySelectorAll('#pers .per').forEach(b => b.classList.toggle('hide', !!q && b.dataset.n.indexOf(q) < 0)); }
 function seguir() { try { Object.assign(S, JSON.parse(localStorage.getItem(LS))); } catch (e) {} render(); }
 function descartar() { try { localStorage.removeItem(LS); } catch (e) {} render(); }
-async function elegirPersona(id, btn) {
-  const err = $('#err'); btn.style.opacity = .5; document.querySelectorAll('.per').forEach(b => b.disabled = true);
+function entrarRut() {
+  const v = ($('#rut') || {}).value || '', err = $('#errRut');
+  if (v.replace(/[^0-9kK]/g, '').length < 7) { err.textContent = 'Revisa el RUT (ej: 12.345.678-9).'; err.classList.remove('hide'); VOZ.say('Revisa el rut.'); return; }
+  elegirPersona(v, $('#bRut'), true);
+}
+async function elegirPersona(id, btn, porRut) {
+  const err = $(porRut ? '#errRut' : '#err'); if (btn) btn.style.opacity = .5; document.querySelectorAll('.per,#bRut').forEach(b => b.disabled = true);
+  const libera = () => document.querySelectorAll('.per,#bRut').forEach(b => { b.disabled = false; b.style.opacity = 1; });
   try {
     const d = await api('apiOperador', id);
-    if (!d.ok) throw 'no';
+    if (!d.ok) { libera(); err.textContent = porRut ? 'No encontramos ese RUT en la nómina de ZG SpA. Revisa que esté bien escrito o busca tu nombre en la lista.' : 'No te encontramos en la nómina.'; err.classList.remove('hide'); VOZ.say('No encontramos ese rut en la nómina.'); return; }
+    id = d.persona.id;
     try { localStorage.setItem('zg_pid', id); S.faena = S.faena || localStorage.getItem('zg_faena') || ''; } catch (e) {}
     Object.assign(S, { persona: d.persona, enc: d.encargados || [], equipos: d.equipos || [], tipo: '', patente: '', nuevoEq: false, res: {}, com: {}, fotos: {}, obs: '', firma: '' });
     S.rep = S.enc.map(g => g.key);   // por defecto se envía a todos
     S.paso = 1; render();
-  } catch (e) { err.textContent = 'Sin conexión con el servidor. Intenta de nuevo.'; err.classList.remove('hide'); document.querySelectorAll('.per').forEach(b => { b.disabled = false; b.style.opacity = 1; }); }
+  } catch (e) { err.textContent = 'Sin conexión con el servidor. Intenta de nuevo.'; err.classList.remove('hide'); libera(); }
 }
 function sugerido(t) {
   const c = (S.persona.cargo || '').toLowerCase(), l = S.persona.lic || [];
